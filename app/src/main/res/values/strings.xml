@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">thisforthat</string>
+    <string name="txtTitle">CHOOSE A CAKE</string>
+    <string name="imgBlackForest">TODO</string>
+    <string name="imgBrazodeMercedes">TODO</string>
+    <string name="imgCheesecake">TODO</string>
+    <string name="imgChocolate">TODO</string>
+    <string name="imgChocolateMousse">TODO</string>
+    <string name="imgMocha">TODO</string>
+    <string name="imgRice">TODO</string>
+    <string name="imgStrawberry">TODO</string>
+    <string name="imgUbe">TODO</string>
+    <string name="imgVanilla">TODO</string>
+    <string name="btnBlackForest">Black Forest</string>
+    <string name="txtStartBaking">to start baking</string>
+    <string name="btnCheesecake">Blueberry Cheesecake</string>
+    <string name="btnBrazodeMercedes">Brazo de Mercedes</string>
+    <string name="btnChocolate">Chocolate</string>
+    <string name="btnChocolateMousse">Chocolate Mousse</string>
+    <string name="btnMocha">Mocha</string>
+    <string name="btnRice">Rice Cake</string>
+    <string name="btnStrawberry">Strawberry</string>
+    <string name="btnUbe">Ube Macapuno</string>
+</resources>

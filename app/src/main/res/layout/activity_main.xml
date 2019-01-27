@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    tools:context=".MainActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="414dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="750dp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imgBlackForest"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="46dp"
+                android:contentDescription="@string/imgBlackForest"
+                app:srcCompat="@drawable/blackforest" />
+
+            <ImageView
+                android:id="@+id/imgBrazodeMercedes"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginEnd="46dp"
+                android:contentDescription="@string/imgBrazodeMercedes"
+                app:srcCompat="@drawable/brazodemercedes" />
+
+            <ImageView
+                android:id="@+id/imgCheesecake"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignStart="@+id/imgBlackForest"
+                android:layout_marginTop="133dp"
+                android:contentDescription="@string/imgCheesecake"
+                app:srcCompat="@drawable/cheesecake" />
+
+            <ImageView
+                android:id="@+id/imgChocolate"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_alignStart="@+id/imgBrazodeMercedes"
+                android:layout_alignTop="@+id/imgCheesecake"
+                android:layout_toEndOf="@+id/imgBrazodeMercedes"
+                android:contentDescription="@string/imgChocolate"
+                app:srcCompat="@drawable/chocolate" />
+
+            <ImageView
+                android:id="@+id/imgChocolateMousse"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignStart="@+id/imgBlackForest"
+                android:layout_marginTop="269dp"
+                android:contentDescription="@string/imgChocolateMousse"
+                app:srcCompat="@drawable/chocolatemousse" />
+
+            <ImageView
+                android:id="@+id/imgMocha"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_alignStart="@+id/imgBrazodeMercedes"
+                android:layout_alignTop="@+id/imgChocolateMousse"
+                android:contentDescription="@string/imgMocha"
+                app:srcCompat="@drawable/mocha" />
+
+            <ImageView
+                android:id="@+id/imgRice"
+                android:layout_width="87dp"
+                android:layout_height="90dp"
+                android:layout_alignParentBottom="false"
+                android:layout_alignParentStart="false"
+                android:layout_alignParentTop="true"
+                android:layout_alignStart="@+id/imgBlackForest"
+                android:layout_marginTop="405dp"
+                android:contentDescription="@string/imgRice"
+                app:srcCompat="@drawable/rice" />
+
+            <ImageView
+                android:id="@+id/imgStrawberry"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_alignStart="@+id/imgBrazodeMercedes"
+                android:layout_alignTop="@+id/imgRice"
+                android:contentDescription="@string/imgStrawberry"
+                app:srcCompat="@drawable/strawberry" />
+
+            <ImageView
+                android:id="@+id/imgUbe"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_alignParentBottom="false"
+                android:layout_alignParentTop="true"
+                android:layout_alignStart="@+id/imgBlackForest"
+                android:layout_marginTop="540dp"
+                android:contentDescription="@string/imgUbe"
+                app:srcCompat="@drawable/ube" />
+
+            <ImageView
+                android:id="@+id/imgVanilla"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_alignStart="@+id/imgBrazodeMercedes"
+                android:layout_alignTop="@+id/imgUbe"
+                android:contentDescription="@string/imgVanilla"
+                app:srcCompat="@drawable/vanilla" />
+
+            <Button
+                android:id="@+id/btnBlackForest"
+                android:layout_width="130dp"
+                android:layout_height="33dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/imgBlackForest"
+                android:layout_marginStart="23dp"
+                android:background="@drawable/button_shape"
+                android:fontFamily="@font/oswald_light"
+                android:onClick="onClick"
+                android:text="@string/btnBlackForest"
+                android:textColor="@color/colorPrimary"
+                android:textColorLink="@color/colorPrimaryDark"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btnBrazodeMercedes"
+                android:layout_width="130dp"
+                android:layout_height="33dp"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/imgBlackForest"
+                android:layout_marginEnd="23dp"
+                android:background="@drawable/button_shape"
+                android:fontFamily="@font/oswald_light"
+                android:onClick="onClick"
+                android:text="@string/btnBrazodeMercedes"
+                android:textColor="@color/colorPrimary"
+                android:textColorLink="@color/colorPrimaryDark"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btnBlueberryCheesecake"
+                android:layout_width="130dp"
+                android:layout_height="33dp"
+                android:layout_alignStart="@+id/btnBlackForest"
+                android:layout_below="@+id/imgCheesecake"
+                android:background="@drawable/button_shape"
+                android:fontFamily="@font/oswald_light"
+                android:onClick="onClick"
+                android:text="@string/btnCheesecake"
+                android:textColor="@color/colorPrimary"
+                android:textColorLink="@color/colorPrimaryDark"
+                android:textSize="10sp" />
+
+            <Button
+                android:id="@+id/btnChocolate"
+                android:layout_width="130dp"
+                android:layout_height="33dp"
+                android:layout_alignStart="@+id/btnBrazodeMercedes"
+                android:layout_below="@+id/imgCheesecake"
+                android:background="@drawable/button_shape"
+                android:fontFamily="@font/oswald_light"
+                android:onClick="onClick"
+                android:text="@string/btnChocolate"
+                android:textColor="@color/colorPrimary"
+                android:textColorLink="@color/colorPrimaryDark"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btnChocolateMousse"
+                android:layout_width="130dp"
+                android:layout_height="33dp"
+                android:layout_alignStart="@+id/btnBlackForest"
+                android:layout_below="@+id/imgChocolateMousse"
+                android:background="@drawable/button_shape"
+                android:fontFamily="@font/oswald_light"
+                android:onClick="onClick"
+                android:text="@string/btnChocolateMousse"
+                android:textColor="@color/colorPrimary"
+                android:textColorLink="@color/colorPrimaryDark"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btnMocha"
+                android:layout_width="130dp"
+                android:layout_height="33dp"
+                android:layout_alignStart="@+id/btnBrazodeMercedes"
+                android:layout_below="@+id/imgChocolateMousse"
+                android:background="@drawable/button_shape"
+                android:fontFamily="@font/oswald_light"
+                android:onClick="onClick"
+                android:text="@string/btnMocha"
+                android:textColor="@color/colorPrimary"
+                android:textColorLink="@color/colorPrimaryDark"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btnRice"
+                android:layout_width="130dp"
+                android:layout_height="33dp"
+                android:layout_alignStart="@+id/btnBlackForest"
+                android:layout_below="@+id/imgRice"
+                android:background="@drawable/button_shape"
+                android:fontFamily="@font/oswald_light"
+                android:onClick="onClick"
+                android:text="@string/btnRice"
+                android:textColor="@color/colorPrimary"
+                android:textColorLink="@color/colorPrimaryDark"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btnStrawberry"
+                android:layout_width="130dp"
+                android:layout_height="33dp"
+                android:layout_alignStart="@+id/btnBrazodeMercedes"
+                android:layout_below="@+id/imgRice"
+                android:background="@drawable/button_shape"
+                android:fontFamily="@font/oswald_light"
+                android:onClick="onClick"
+                android:text="@string/btnStrawberry"
+                android:textColor="@color/colorPrimary"
+                android:textColorLink="@color/colorPrimaryDark"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btnUbe"
+                android:layout_width="130dp"
+                android:layout_height="33dp"
+                android:layout_alignStart="@+id/btnBlackForest"
+                android:layout_below="@+id/imgUbe"
+                android:background="@drawable/button_shape"
+                android:fontFamily="@font/oswald_light"
+                android:onClick="onClick"
+                android:text="@string/btnUbe"
+                android:textColor="@color/colorPrimary"
+                android:textColorLink="@color/colorPrimaryDark"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btnVanilla"
+                android:layout_width="130dp"
+                android:layout_height="33dp"
+                android:layout_alignStart="@+id/btnBrazodeMercedes"
+                android:layout_below="@+id/imgUbe"
+                android:background="@drawable/button_shape"
+                android:fontFamily="@font/oswald_light"
+                android:onClick="onClick"
+                android:text="Vanilla"
+                android:textColor="@color/colorPrimary"
+                android:textColorLink="@color/colorPrimaryDark"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btnLogout"
+                android:layout_width="wrap_content"
+                android:layout_height="33dp"
+                android:layout_below="@+id/btnUbe"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="25dp"
+                android:background="@drawable/button_next"
+                android:fontFamily="@font/oswald_light"
+                android:onClick="onLogout"
+                android:text="LOG OUT"
+                android:textColor="@android:color/white" />
+
+        </RelativeLayout>
+    </ScrollView>
+
+    <TextView
+        android:id="@+id/txtChoose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="45dp"
+        android:fontFamily="@font/oswald_bold"
+        android:text="CHOOSE A CAKE"
+        android:textSize="35sp" />
+
+
+</RelativeLayout>

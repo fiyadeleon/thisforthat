@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "201993765105",
+    "firebase_url": "https://thisforthat-395a0.firebaseio.com",
+    "project_id": "thisforthat-395a0",
+    "storage_bucket": "thisforthat-395a0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:201993765105:android:9c62b0bd46569e90",
+        "android_client_info": {
+          "package_name": "com.example.kenneth.thisforthat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "201993765105-fos2e5mbhfidh7jmq5e4jopu14pvid94.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.kenneth.thisforthat",
+            "certificate_hash": "6d0b81e983937e0f2101f96bc61053371358aadb"
+          }
+        },
+        {
+          "client_id": "201993765105-b0282cun9l2on0depdu97145hr3edvp7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAnFhtyx08GJYXXq6iE2EBxcpZQzKpYu0c"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "201993765105-b0282cun9l2on0depdu97145hr3edvp7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
