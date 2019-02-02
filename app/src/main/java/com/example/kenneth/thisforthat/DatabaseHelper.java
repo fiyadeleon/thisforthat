@@ -5,7 +5,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static com.example.kenneth.thisforthat.SubBF.*;
 
@@ -15,6 +17,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
     public SQLiteDatabase o_db;
     public static final String USER_PASSWORD = "userpassword";
+    public static List<String> onhand = new ArrayList<String> ();
+    public static String[] arrOnhand;
 
     //tables common columns
     public static final String KEY_ID = "_id";
@@ -1006,10 +1010,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = o_db.query(TABLE_BF, new String[]{"_id","name","amount","selected"}, "selected = 0", null, null, null, "name asc");
 
         missing.clear ();
-
-        int index_CONTENT = cursor.getColumnIndex(KEY_NAME);
+        int index_AMOUNT = cursor.getColumnIndex(KEY_AMOUNT);
+        int index_NAME = cursor.getColumnIndex(KEY_NAME);
         for(cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()){
-            missing.add(cursor.getString(index_CONTENT));
+            String a = cursor.getString(index_AMOUNT);
+            String n = cursor.getString(index_NAME);
+            String amount = a.toLowerCase ();
+            String name = n.toLowerCase ();
+            missing.add(amount+" "+name);
+        }
+
+        Cursor cursor1 = o_db.query(TABLE_BF, new String[]{"_id","name","amount","selected"}, "selected = 1", null, null, null, "name asc");
+
+        onhand.clear ();
+        int index_AMOUNT1 = cursor1.getColumnIndex(KEY_AMOUNT);
+        int index_NAME1 = cursor1.getColumnIndex(KEY_NAME);
+        for(cursor1.moveToFirst(); !(cursor1.isAfterLast()); cursor1.moveToNext()){
+            String a = cursor1.getString(index_AMOUNT1);
+            String n = cursor1.getString(index_NAME1);
+            String amount = a.toLowerCase ();
+            String name = n.toLowerCase ();
+            onhand.add(amount+" "+name);
         }
         /*
         if (cursor!=null){
@@ -1041,10 +1062,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = o_db.query(TABLE_BC, new String[]{"_id","name","amount","selected"}, "selected = 0", null, null, null, "name asc");
 
         missing.clear ();
-
-        int index_CONTENT = cursor.getColumnIndex(KEY_NAME);
+        int index_AMOUNT = cursor.getColumnIndex(KEY_AMOUNT);
+        int index_NAME = cursor.getColumnIndex(KEY_NAME);
         for(cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()){
-            missing.add(cursor.getString(index_CONTENT));
+            String a = cursor.getString(index_AMOUNT);
+            String n = cursor.getString(index_NAME);
+            String amount = a.toLowerCase ();
+            String name = n.toLowerCase ();
+            missing.add(amount+" "+name);
+        }
+
+        Cursor cursor1 = o_db.query(TABLE_BC, new String[]{"_id","name","amount","selected"}, "selected = 1", null, null, null, "name asc");
+
+        onhand.clear ();
+        int index_AMOUNT1 = cursor1.getColumnIndex(KEY_AMOUNT);
+        int index_NAME1 = cursor1.getColumnIndex(KEY_NAME);
+        for(cursor1.moveToFirst(); !(cursor1.isAfterLast()); cursor1.moveToNext()){
+            String a = cursor1.getString(index_AMOUNT1);
+            String n = cursor1.getString(index_NAME1);
+            String amount = a.toLowerCase ();
+            String name = n.toLowerCase ();
+            onhand.add(amount+" "+name);
         }
     }
 
@@ -1071,10 +1109,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = o_db.query(TABLE_BM, new String[]{"_id","name","amount","selected"}, "selected = 0", null, null, null, "name asc");
 
         missing.clear ();
-
-        int index_CONTENT = cursor.getColumnIndex(KEY_NAME);
+        int index_AMOUNT = cursor.getColumnIndex(KEY_AMOUNT);
+        int index_NAME = cursor.getColumnIndex(KEY_NAME);
         for(cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()){
-            missing.add(cursor.getString(index_CONTENT));
+            String a = cursor.getString(index_AMOUNT);
+            String n = cursor.getString(index_NAME);
+            String amount = a.toLowerCase ();
+            String name = n.toLowerCase ();
+            missing.add(amount+" "+name);
+        }
+
+        Cursor cursor1 = o_db.query(TABLE_BM, new String[]{"_id","name","amount","selected"}, "selected = 1", null, null, null, "name asc");
+
+        onhand.clear ();
+        int index_AMOUNT1 = cursor1.getColumnIndex(KEY_AMOUNT);
+        int index_NAME1 = cursor1.getColumnIndex(KEY_NAME);
+        for(cursor1.moveToFirst(); !(cursor1.isAfterLast()); cursor1.moveToNext()){
+            String a = cursor1.getString(index_AMOUNT1);
+            String n = cursor1.getString(index_NAME1);
+            String amount = a.toLowerCase ();
+            String name = n.toLowerCase ();
+            onhand.add(amount+" "+name);
         }
     }
 
@@ -1101,10 +1156,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = o_db.query(TABLE_CC, new String[]{"_id","name","amount","selected"}, "selected = 0", null, null, null, "name asc");
 
         missing.clear ();
-
-        int index_CONTENT = cursor.getColumnIndex(KEY_NAME);
+        int index_AMOUNT = cursor.getColumnIndex(KEY_AMOUNT);
+        int index_NAME = cursor.getColumnIndex(KEY_NAME);
         for(cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()){
-            missing.add(cursor.getString(index_CONTENT));
+            String a = cursor.getString(index_AMOUNT);
+            String n = cursor.getString(index_NAME);
+            String amount = a.toLowerCase ();
+            String name = n.toLowerCase ();
+            missing.add(amount+" "+name);
+        }
+
+        Cursor cursor1 = o_db.query(TABLE_CC, new String[]{"_id","name","amount","selected"}, "selected = 1", null, null, null, "name asc");
+
+        onhand.clear ();
+        int index_AMOUNT1 = cursor1.getColumnIndex(KEY_AMOUNT);
+        int index_NAME1 = cursor1.getColumnIndex(KEY_NAME);
+        for(cursor1.moveToFirst(); !(cursor1.isAfterLast()); cursor1.moveToNext()){
+            String a = cursor1.getString(index_AMOUNT1);
+            String n = cursor1.getString(index_NAME1);
+            String amount = a.toLowerCase ();
+            String name = n.toLowerCase ();
+            onhand.add(amount+" "+name);
         }
     }
 
@@ -1131,10 +1203,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = o_db.query(TABLE_CM, new String[]{"_id","name","amount","selected"}, "selected = 0", null, null, null, "name asc");
 
         missing.clear ();
-
-        int index_CONTENT = cursor.getColumnIndex(KEY_NAME);
+        int index_AMOUNT = cursor.getColumnIndex(KEY_AMOUNT);
+        int index_NAME = cursor.getColumnIndex(KEY_NAME);
         for(cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()){
-            missing.add(cursor.getString(index_CONTENT));
+            String a = cursor.getString(index_AMOUNT);
+            String n = cursor.getString(index_NAME);
+            String amount = a.toLowerCase ();
+            String name = n.toLowerCase ();
+            missing.add(amount+" "+name);
+        }
+
+        Cursor cursor1 = o_db.query(TABLE_CM, new String[]{"_id","name","amount","selected"}, "selected = 1", null, null, null, "name asc");
+
+        onhand.clear ();
+        int index_AMOUNT1 = cursor1.getColumnIndex(KEY_AMOUNT);
+        int index_NAME1 = cursor1.getColumnIndex(KEY_NAME);
+        for(cursor1.moveToFirst(); !(cursor1.isAfterLast()); cursor1.moveToNext()){
+            String a = cursor1.getString(index_AMOUNT1);
+            String n = cursor1.getString(index_NAME1);
+            String amount = a.toLowerCase ();
+            String name = n.toLowerCase ();
+            onhand.add(amount+" "+name);
         }
     }
 
@@ -1161,10 +1250,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = o_db.query(TABLE_MC, new String[]{"_id","name","amount","selected"}, "selected = 0", null, null, null, "name asc");
 
         missing.clear ();
-
-        int index_CONTENT = cursor.getColumnIndex(KEY_NAME);
+        int index_AMOUNT = cursor.getColumnIndex(KEY_AMOUNT);
+        int index_NAME = cursor.getColumnIndex(KEY_NAME);
         for(cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()){
-            missing.add(cursor.getString(index_CONTENT));
+            String a = cursor.getString(index_AMOUNT);
+            String n = cursor.getString(index_NAME);
+            String amount = a.toLowerCase ();
+            String name = n.toLowerCase ();
+            missing.add(amount+" "+name);
+        }
+
+        Cursor cursor1 = o_db.query(TABLE_MC, new String[]{"_id","name","amount","selected"}, "selected = 1", null, null, null, "name asc");
+
+        onhand.clear ();
+        int index_AMOUNT1 = cursor1.getColumnIndex(KEY_AMOUNT);
+        int index_NAME1 = cursor1.getColumnIndex(KEY_NAME);
+        for(cursor1.moveToFirst(); !(cursor1.isAfterLast()); cursor1.moveToNext()){
+            String a = cursor1.getString(index_AMOUNT1);
+            String n = cursor1.getString(index_NAME1);
+            String amount = a.toLowerCase ();
+            String name = n.toLowerCase ();
+            onhand.add(amount+" "+name);
         }
     }
 
@@ -1191,10 +1297,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = o_db.query(TABLE_RC, new String[]{"_id","name","amount","selected"}, "selected = 0", null, null, null, "name asc");
 
         missing.clear ();
-
-        int index_CONTENT = cursor.getColumnIndex(KEY_NAME);
+        int index_AMOUNT = cursor.getColumnIndex(KEY_AMOUNT);
+        int index_NAME = cursor.getColumnIndex(KEY_NAME);
         for(cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()){
-            missing.add(cursor.getString(index_CONTENT));
+            String a = cursor.getString(index_AMOUNT);
+            String n = cursor.getString(index_NAME);
+            String amount = a.toLowerCase ();
+            String name = n.toLowerCase ();
+            missing.add(amount+" "+name);
+        }
+
+        Cursor cursor1 = o_db.query(TABLE_RC, new String[]{"_id","name","amount","selected"}, "selected = 1", null, null, null, "name asc");
+
+        onhand.clear ();
+        int index_AMOUNT1 = cursor1.getColumnIndex(KEY_AMOUNT);
+        int index_NAME1 = cursor1.getColumnIndex(KEY_NAME);
+        for(cursor1.moveToFirst(); !(cursor1.isAfterLast()); cursor1.moveToNext()){
+            String a = cursor1.getString(index_AMOUNT1);
+            String n = cursor1.getString(index_NAME1);
+            String amount = a.toLowerCase ();
+            String name = n.toLowerCase ();
+            onhand.add(amount+" "+name);
         }
     }
 
@@ -1221,10 +1344,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = o_db.query(TABLE_SC, new String[]{"_id","name","amount","selected"}, "selected = 0", null, null, null, "name asc");
 
         missing.clear ();
-
-        int index_CONTENT = cursor.getColumnIndex(KEY_NAME);
+        int index_AMOUNT = cursor.getColumnIndex(KEY_AMOUNT);
+        int index_NAME = cursor.getColumnIndex(KEY_NAME);
         for(cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()){
-            missing.add(cursor.getString(index_CONTENT));
+            String a = cursor.getString(index_AMOUNT);
+            String n = cursor.getString(index_NAME);
+            String amount = a.toLowerCase ();
+            String name = n.toLowerCase ();
+            missing.add(amount+" "+name);
+        }
+
+        Cursor cursor1 = o_db.query(TABLE_SC, new String[]{"_id","name","amount","selected"}, "selected = 1", null, null, null, "name asc");
+
+        onhand.clear ();
+        int index_AMOUNT1 = cursor1.getColumnIndex(KEY_AMOUNT);
+        int index_NAME1 = cursor1.getColumnIndex(KEY_NAME);
+        for(cursor1.moveToFirst(); !(cursor1.isAfterLast()); cursor1.moveToNext()){
+            String a = cursor1.getString(index_AMOUNT1);
+            String n = cursor1.getString(index_NAME1);
+            String amount = a.toLowerCase ();
+            String name = n.toLowerCase ();
+            onhand.add(amount+" "+name);
         }
     }
 
@@ -1251,10 +1391,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = o_db.query(TABLE_UM, new String[]{"_id","name","amount","selected"}, "selected = 0", null, null, null, "name asc");
 
         missing.clear ();
-
-        int index_CONTENT = cursor.getColumnIndex(KEY_NAME);
+        int index_AMOUNT = cursor.getColumnIndex(KEY_AMOUNT);
+        int index_NAME = cursor.getColumnIndex(KEY_NAME);
         for(cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()){
-            missing.add(cursor.getString(index_CONTENT));
+            String a = cursor.getString(index_AMOUNT);
+            String n = cursor.getString(index_NAME);
+            String amount = a.toLowerCase ();
+            String name = n.toLowerCase ();
+            missing.add(amount+" "+name);
+        }
+
+        Cursor cursor1 = o_db.query(TABLE_UM, new String[]{"_id","name","amount","selected"}, "selected = 1", null, null, null, "name asc");
+
+        onhand.clear ();
+        int index_AMOUNT1 = cursor1.getColumnIndex(KEY_AMOUNT);
+        int index_NAME1 = cursor1.getColumnIndex(KEY_NAME);
+        for(cursor1.moveToFirst(); !(cursor1.isAfterLast()); cursor1.moveToNext()){
+            String a = cursor1.getString(index_AMOUNT1);
+            String n = cursor1.getString(index_NAME1);
+            String amount = a.toLowerCase ();
+            String name = n.toLowerCase ();
+            onhand.add(amount+" "+name);
         }
     }
 
@@ -1281,10 +1438,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = o_db.query(TABLE_VC, new String[]{"_id","name","amount","selected"}, "selected = 0", null, null, null, "name asc");
 
         missing.clear ();
-
-        int index_CONTENT = cursor.getColumnIndex(KEY_NAME);
+        int index_AMOUNT = cursor.getColumnIndex(KEY_AMOUNT);
+        int index_NAME = cursor.getColumnIndex(KEY_NAME);
         for(cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()){
-            missing.add(cursor.getString(index_CONTENT));
+            String a = cursor.getString(index_AMOUNT);
+            String n = cursor.getString(index_NAME);
+            String amount = a.toLowerCase ();
+            String name = n.toLowerCase ();
+            missing.add(amount+" "+name);
+        }
+
+        Cursor cursor1 = o_db.query(TABLE_VC, new String[]{"_id","name","amount","selected"}, "selected = 1", null, null, null, "name asc");
+
+        onhand.clear ();
+        int index_AMOUNT1 = cursor1.getColumnIndex(KEY_AMOUNT);
+        int index_NAME1 = cursor1.getColumnIndex(KEY_NAME);
+        for(cursor1.moveToFirst(); !(cursor1.isAfterLast()); cursor1.moveToNext()){
+            String a = cursor1.getString(index_AMOUNT1);
+            String n = cursor1.getString(index_NAME1);
+            String amount = a.toLowerCase ();
+            String name = n.toLowerCase ();
+            onhand.add(amount+" "+name);
         }
     }
 

@@ -1,63 +1,59 @@
 package com.example.kenneth.thisforthat;
 
-import android.Manifest;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.util.Log;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.Authenticator;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.PasswordAuthentication;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 
-import static android.content.ContentValues.TAG;
 import static com.example.kenneth.thisforthat.DatabaseHelper.*;
-import static com.example.kenneth.thisforthat.SubBF.missingData;
 
 public class Ingredients extends ListActivity{
-    public DatabaseHelper mySQLiteAdapter;
-    public Button mDialogyes, mDialogno;
-
-    public static String myString;
-    public static String contentRead;
-    public static String TABLE_NAME;
-    public static Dialog mDialog;
-
-    int buttonValue;
     Cursor cursor;
     SQLiteDatabase dh;
     CustomCursorAdapter myCursorAdapter;
     ContentValues values;
-    String data ="";
-    String label,quantity;
+    public DatabaseHelper mySQLiteAdapter;
+    public static String TABLE_NAME;
+    int buttonValue;
+    public static Dialog mDialog;
+    public Button mDialogyes, mDialogno;
+    String sCurrentline;
+    int index = 0;
 
-    //String sql = "INSERT INTO "+ TABLE_USERING +" SELECT _id, name, amount, selected FROM "+ TABLE_BF +" WHERE selected = 0";
+    List<String> onhandList = new ArrayList<String>();
+    String[] arrOnhandList;
+
+    List<String> checkFreq = new ArrayList<String> ();
+    String[] arrCheckFreq;
+
+    List<String> mainIng = new ArrayList<String> ();
+    String[] arrMainIng;
+
+    List<String[]> subIng = new ArrayList<String[]> ();
+    String[][] arrSubIng;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,32 +61,726 @@ public class Ingredients extends ListActivity{
         AndroidContext.setContext(this);
         dh = DatabaseHelper.getInstance().getDb();
         values = new ContentValues();
-        createDialog();
 
+        checkUser();
+        createDialog();
+        display ();
+    }
+
+    public void checkUser(){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        String name = sp.getString("Username", "");
+
+        try {
+            File file = new File("/sdcard/TABLE_BF.csv");
+            BufferedReader br = new BufferedReader(new FileReader (file));
+            sCurrentline = br.readLine ();
+            String[] col = sCurrentline.split (",");
+
+            for (int i = 0; i < col.length; i++) {
+                //check kung nasa header ba ung username ng gumagamit na user then kukunin ung index
+                if (col[i].equals (name)) {
+                    index = i;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace ();
+        }
+
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putInt ("Index", index);
+        editor.commit();
+    }
+
+    public void display(){
         buttonValue = Integer.valueOf(getIntent ().getStringExtra("yourcode"));
-        mySQLiteAdapter = new DatabaseHelper ();
+        BufferedReader br;
 
         if (1 == buttonValue ) {
-            bfListView ();
+            File file = new File("/sdcard/TABLE_BF.csv");
+
+            try {
+                String[] checkCol;
+                br = new BufferedReader (new FileReader (file));
+                sCurrentline = br.readLine ();
+                //check lahat nung lines sa csv file
+                while ((sCurrentline = br.readLine ()) != null) {
+                    checkCol = sCurrentline.split (",");
+                    checkFreq.add (checkCol[index]);
+                }
+
+                if(checkFreq.contains(0)){
+                    System.out.println ("puro zero");
+                    bfListView ();
+                }else{
+                    startActivity(new Intent (Ingredients.this, NewIngredients.class));
+                    try {
+                        String[] checkMainIng;
+                        br = new BufferedReader (new FileReader ("/sdcard/MAIN_BF.csv"));
+                        //check lahat nung lines sa csv file
+                        while ((sCurrentline = br.readLine ()) != null) {
+                            checkMainIng = sCurrentline.split (",");
+                            mainIng.add (checkMainIng[0]);
+
+                            try {
+                                br = new BufferedReader (new FileReader ("/sdcard/TABLE_BF.csv"));
+                                //check lahat nung lines sa csv file
+                                while ((sCurrentline = br.readLine ()) != null) {
+                                    subIng.add(sCurrentline.split (","));
+                                    arrSubIng = new String[subIng.size ()][];
+                                    subIng.toArray (arrSubIng);
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace ();
+                            }
+                            /*
+                            for(int i = 0; i < subIng.size (); i++) {
+                                if (checkMainIng[0].equals (arrSubIng[i][0])) {
+                                    System.out.println (arrSubIng[i][1]);
+                                }
+                            }*/
+
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace ();
+                    }
+
+                }
+            } catch (IOException e) {
+                e.printStackTrace ();
+            }
+
         }else if (2 == buttonValue){
-            bmListView ();
+            File file = new File("/sdcard/TABLE_BM.csv");
+
+            try {
+                String[] checkCol;
+                br = new BufferedReader (new FileReader (file));
+                sCurrentline = br.readLine ();
+                //check lahat nung lines sa csv file
+                while ((sCurrentline = br.readLine ()) != null) {
+                    checkCol = sCurrentline.split (",");
+                    //then iistore ung naread na data sa csv na nasa column[i]
+                    checkFreq.add (checkCol[index]);
+                }
+
+                if(checkFreq.contains(0)){
+                    System.out.println ("puro zero");
+                    bmListView ();
+
+                }else{
+                    startActivity(new Intent (Ingredients.this, NewIngredients.class));
+                }
+            } catch (IOException e) {
+                e.printStackTrace ();
+            }
+
         }else if (3 == buttonValue){
-            bcListView ();
+            File file = new File("/sdcard/TABLE_BC.csv");
+
+            try {
+                String[] checkCol;
+                br = new BufferedReader (new FileReader (file));
+                sCurrentline = br.readLine ();
+                //check lahat nung lines sa csv file
+                while ((sCurrentline = br.readLine ()) != null) {
+                    checkCol = sCurrentline.split (",");
+                    //then iistore ung naread na data sa csv na nasa column[i]
+                    checkFreq.add (checkCol[index]);
+                }
+
+                if(checkFreq.contains(0)){
+                    System.out.println ("puro zero");
+                    bcListView ();
+
+                }else{
+                    startActivity(new Intent (Ingredients.this, NewIngredients.class));
+                }
+            } catch (IOException e) {
+                e.printStackTrace ();
+            }
+
         }else if (4 == buttonValue){
-            ccListView ();
+            File file = new File("/sdcard/TABLE_CC.csv");
+
+            try {
+                String[] checkCol;
+                br = new BufferedReader (new FileReader (file));
+                sCurrentline = br.readLine ();
+                //check lahat nung lines sa csv file
+                while ((sCurrentline = br.readLine ()) != null) {
+                    checkCol = sCurrentline.split (",");
+                    //then iistore ung naread na data sa csv na nasa column[i]
+                    checkFreq.add (checkCol[index]);
+                }
+
+                if(checkFreq.contains(0)){
+                    System.out.println ("puro zero");
+                    ccListView ();
+
+                }else{
+                    startActivity(new Intent (Ingredients.this, NewIngredients.class));
+                }
+            } catch (IOException e) {
+                e.printStackTrace ();
+            }
+
         }else if (5 == buttonValue){
-            cmListView ();
+            File file = new File("/sdcard/TABLE_CM.csv");
+
+            try {
+                String[] checkCol;
+                br = new BufferedReader (new FileReader (file));
+                sCurrentline = br.readLine ();
+                //check lahat nung lines sa csv file
+                while ((sCurrentline = br.readLine ()) != null) {
+                    checkCol = sCurrentline.split (",");
+                    //then iistore ung naread na data sa csv na nasa column[i]
+                    checkFreq.add (checkCol[index]);
+                }
+
+                if(checkFreq.contains(0)){
+                    System.out.println ("puro zero");
+                    cmListView ();
+
+                }else{
+                    startActivity(new Intent (Ingredients.this, NewIngredients.class));
+                }
+            } catch (IOException e) {
+                e.printStackTrace ();
+            }
+
         }else if (6 == buttonValue){
-            mcListView ();
+            File file = new File("/sdcard/TABLE_MC.csv");
+
+            try {
+                String[] checkCol;
+                br = new BufferedReader (new FileReader (file));
+                sCurrentline = br.readLine ();
+                //check lahat nung lines sa csv file
+                while ((sCurrentline = br.readLine ()) != null) {
+                    checkCol = sCurrentline.split (",");
+                    //then iistore ung naread na data sa csv na nasa column[i]
+                    checkFreq.add (checkCol[index]);
+                }
+
+                if(checkFreq.contains(0)){
+                    System.out.println ("puro zero");
+                    mcListView ();
+
+                }else{
+                    startActivity(new Intent (Ingredients.this, NewIngredients.class));
+                }
+            } catch (IOException e) {
+                e.printStackTrace ();
+            }
+
         }else if (7 == buttonValue){
-            rcListView ();
+            File file = new File("/sdcard/TABLE_RC.csv");
+
+            try {
+                String[] checkCol;
+                br = new BufferedReader (new FileReader (file));
+                sCurrentline = br.readLine ();
+                //check lahat nung lines sa csv file
+                while ((sCurrentline = br.readLine ()) != null) {
+                    checkCol = sCurrentline.split (",");
+                    //then iistore ung naread na data sa csv na nasa column[i]
+                    checkFreq.add (checkCol[index]);
+                }
+
+                if(checkFreq.contains(0)){
+                    System.out.println ("puro zero");
+                    rcListView ();
+
+                }else{
+                    startActivity(new Intent (Ingredients.this, NewIngredients.class));
+                }
+            } catch (IOException e) {
+                e.printStackTrace ();
+            }
+
         }else if (8 == buttonValue){
-            scListView ();
+            File file = new File("/sdcard/TABLE_SC.csv");
+
+            try {
+                String[] checkCol;
+                br = new BufferedReader (new FileReader (file));
+                sCurrentline = br.readLine ();
+                //check lahat nung lines sa csv file
+                while ((sCurrentline = br.readLine ()) != null) {
+                    checkCol = sCurrentline.split (",");
+                    //then iistore ung naread na data sa csv na nasa column[i]
+                    checkFreq.add (checkCol[index]);
+                }
+
+                if(checkFreq.contains(0)){
+                    System.out.println ("puro zero");
+                    scListView ();
+
+                }else{
+                    startActivity(new Intent (Ingredients.this, NewIngredients.class));
+                }
+            } catch (IOException e) {
+                e.printStackTrace ();
+            }
+
         }else if (9 == buttonValue){
-            umListView ();
+            File file = new File("/sdcard/TABLE_UM.csv");
+
+            try {
+                String[] checkCol;
+                br = new BufferedReader (new FileReader (file));
+                sCurrentline = br.readLine ();
+                //check lahat nung lines sa csv file
+                while ((sCurrentline = br.readLine ()) != null) {
+                    checkCol = sCurrentline.split (",");
+                    //then iistore ung naread na data sa csv na nasa column[i]
+                    checkFreq.add (checkCol[index]);
+                }
+
+                if(checkFreq.contains(0)){
+                    System.out.println ("puro zero");
+                    umListView ();
+
+                }else{
+                    startActivity(new Intent (Ingredients.this, NewIngredients.class));
+                }
+            } catch (IOException e) {
+                e.printStackTrace ();
+            }
+
         }else if (10 == buttonValue){
-            vcListView ();
+            File file = new File("/sdcard/TABLE_VC.csv");
+
+            try {
+                String[] checkCol;
+                br = new BufferedReader (new FileReader (file));
+                sCurrentline = br.readLine ();
+                //check lahat nung lines sa csv file
+                while ((sCurrentline = br.readLine ()) != null) {
+                    checkCol = sCurrentline.split (",");
+                    //then iistore ung naread na data sa csv na nasa column[i]
+                    checkFreq.add (checkCol[index]);
+                }
+
+                if(checkFreq.contains(0)){
+                    System.out.println ("puro zero");
+                    vcListView ();
+
+                }else{
+                    startActivity(new Intent (Ingredients.this, NewIngredients.class));
+                }
+            } catch (IOException e) {
+                e.printStackTrace ();
+            }
         }
+    }
+
+    protected void createDialog() {
+        checkUser ();
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        final int getIndex = sp.getInt ("Index", 0);
+        System.out.println (getIndex);
+
+        mDialog = new Dialog (this);
+        mDialog.requestWindowFeature (Window.FEATURE_NO_TITLE);
+        mDialog.setContentView (R.layout.dialog_exit);
+
+        mDialog.setCanceledOnTouchOutside (true);
+        mDialog.setCancelable (true);
+        mDialogyes = ( Button ) mDialog.findViewById (R.id.yes);
+        mDialogno = ( Button ) mDialog.findViewById (R.id.No);
+        mDialogyes.setOnClickListener (new View.OnClickListener () {
+
+            @Override
+            public void onClick(View v) {
+                int buttonValue = Integer.valueOf(getIntent ().getStringExtra("yourcode"));
+                onhandList.clear ();
+                onhand.clear ();
+
+                if (1 == buttonValue ) {
+                    mySQLiteAdapter = new DatabaseHelper ();
+                    mySQLiteAdapter.getInstance ();
+                    String contentRead = mySQLiteAdapter.queueAllBF();
+                    mySQLiteAdapter.queueNameBF();
+                    mySQLiteAdapter.close();
+
+                    TABLE_NAME = "TABLE_BF";
+
+                    try {
+                        File file = new File("/sdcard/TABLE_BF.csv");
+                        BufferedReader br = new BufferedReader(new FileReader (file));
+                        while((sCurrentline = br.readLine()) != null ) {
+                            String[] col = sCurrentline.split (",");
+                            onhandList.add (col[1]);
+                        }
+                        for (int i = 0; i < onhandList.size (); i++) {
+                            for (int j = 0; j < onhand.size (); j++) {
+                                if (onhandList.get (i).equals (onhand.get (j))) {
+                                    CSVReader reader = new CSVReader (new FileReader("/sdcard/TABLE_BF.csv"), ',');
+                                    List<String[]> csvBody = reader.readAll();
+                                    int convert = Integer.parseInt (csvBody.get(i)[getIndex]) + 1;
+                                    csvBody.get(i)[getIndex] = String.valueOf (convert);
+                                    reader.close();
+
+                                    CSVWriter writer = new CSVWriter(new FileWriter ("/sdcard/TABLE_BF.csv"), ',', CSVWriter.NO_QUOTE_CHARACTER);
+                                    writer.writeAll(csvBody);
+                                    writer.flush();
+                                    writer.close();
+                                }
+                            }
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }else if (2 == buttonValue){
+                    mySQLiteAdapter = new DatabaseHelper ();
+                    mySQLiteAdapter.getInstance ();
+                    String contentRead = mySQLiteAdapter.queueAllBM();
+                    mySQLiteAdapter.queueNameBM();
+                    mySQLiteAdapter.close();
+
+                    TABLE_NAME = "TABLE_BM";
+
+                    try {
+                        File file = new File("/sdcard/TABLE_BM.csv");
+                        BufferedReader br = new BufferedReader(new FileReader (file));
+                        while((sCurrentline = br.readLine()) != null ) {
+                            String[] col = sCurrentline.split (",");
+                            onhandList.add (col[1]);
+                        }
+                        for (int i = 0; i < onhandList.size (); i++) {
+                            for (int j = 0; j < onhand.size (); j++) {
+                                if (onhandList.get (i).equals (onhand.get (j))) {
+                                    CSVReader reader = new CSVReader (new FileReader("/sdcard/TABLE_BM.csv"), ',');
+                                    List<String[]> csvBody = reader.readAll();
+                                    int convert = Integer.parseInt (csvBody.get(i)[getIndex]) + 1;
+                                    csvBody.get(i)[getIndex] = String.valueOf (convert);
+                                    reader.close();
+
+                                    CSVWriter writer = new CSVWriter(new FileWriter ("/sdcard/TABLE_BM.csv"), ',', CSVWriter.NO_QUOTE_CHARACTER);
+                                    writer.writeAll(csvBody);
+                                    writer.flush();
+                                    writer.close();
+                                }
+                            }
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }else if (3 == buttonValue){
+                    mySQLiteAdapter = new DatabaseHelper ();
+                    mySQLiteAdapter.getInstance ();
+                    String contentRead = mySQLiteAdapter.queueAllBC();
+                    mySQLiteAdapter.queueNameBC();
+                    mySQLiteAdapter.close();
+
+                    TABLE_NAME = "TABLE_BC";
+
+                    try {
+                        File file = new File("/sdcard/TABLE_BC.csv");
+                        BufferedReader br = new BufferedReader(new FileReader (file));
+                        while((sCurrentline = br.readLine()) != null ) {
+                            String[] col = sCurrentline.split (",");
+                            onhandList.add (col[1]);
+                        }
+                        for (int i = 0; i < onhandList.size (); i++) {
+                            for (int j = 0; j < onhand.size (); j++) {
+                                if (onhandList.get (i).equals (onhand.get (j))) {
+                                    CSVReader reader = new CSVReader (new FileReader("/sdcard/TABLE_BC.csv"), ',');
+                                    List<String[]> csvBody = reader.readAll();
+                                    int convert = Integer.parseInt (csvBody.get(i)[getIndex]) + 1;
+                                    csvBody.get(i)[getIndex] = String.valueOf (convert);
+                                    reader.close();
+
+                                    CSVWriter writer = new CSVWriter(new FileWriter ("/sdcard/TABLE_BC.csv"), ',', CSVWriter.NO_QUOTE_CHARACTER);
+                                    writer.writeAll(csvBody);
+                                    writer.flush();
+                                    writer.close();
+                                }
+                            }
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }else if (4 == buttonValue){
+                    mySQLiteAdapter = new DatabaseHelper ();
+                    mySQLiteAdapter.getInstance ();
+                    String contentRead = mySQLiteAdapter.queueAllCC ();
+                    mySQLiteAdapter.queueNameCC();
+                    mySQLiteAdapter.close();
+
+                    TABLE_NAME = "TABLE_CC";
+
+                    try {
+                        File file = new File("/sdcard/TABLE_CC.csv");
+                        BufferedReader br = new BufferedReader(new FileReader (file));
+                        while((sCurrentline = br.readLine()) != null ) {
+                            String[] col = sCurrentline.split (",");
+                            onhandList.add (col[1]);
+                        }
+                        for (int i = 0; i < onhandList.size (); i++) {
+                            for (int j = 0; j < onhand.size (); j++) {
+                                if (onhandList.get (i).equals (onhand.get (j))) {
+                                    CSVReader reader = new CSVReader (new FileReader("/sdcard/TABLE_CC.csv"), ',');
+                                    List<String[]> csvBody = reader.readAll();
+                                    int convert = Integer.parseInt (csvBody.get(i)[getIndex]) + 1;
+                                    csvBody.get(i)[getIndex] = String.valueOf (convert);
+                                    reader.close();
+
+                                    CSVWriter writer = new CSVWriter(new FileWriter ("/sdcard/TABLE_CC.csv"), ',', CSVWriter.NO_QUOTE_CHARACTER);
+                                    writer.writeAll(csvBody);
+                                    writer.flush();
+                                    writer.close();
+                                }
+                            }
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }else if (5 == buttonValue){
+                    mySQLiteAdapter = new DatabaseHelper ();
+                    mySQLiteAdapter.getInstance ();
+                    String contentRead = mySQLiteAdapter.queueAllCM();
+                    mySQLiteAdapter.queueNameCM();
+                    mySQLiteAdapter.close();
+
+                    TABLE_NAME = "TABLE_CM";
+
+                    try {
+                        File file = new File("/sdcard/TABLE_CM.csv");
+                        BufferedReader br = new BufferedReader(new FileReader (file));
+                        while((sCurrentline = br.readLine()) != null ) {
+                            String[] col = sCurrentline.split (",");
+                            onhandList.add (col[1]);
+                        }
+                        for (int i = 0; i < onhandList.size (); i++) {
+                            for (int j = 0; j < onhand.size (); j++) {
+                                if (onhandList.get (i).equals (onhand.get (j))) {
+                                    CSVReader reader = new CSVReader (new FileReader("/sdcard/TABLE_CM.csv"), ',');
+                                    List<String[]> csvBody = reader.readAll();
+                                    int convert = Integer.parseInt (csvBody.get(i)[getIndex]) + 1;
+                                    csvBody.get(i)[getIndex] = String.valueOf (convert);
+                                    reader.close();
+
+                                    CSVWriter writer = new CSVWriter(new FileWriter ("/sdcard/TABLE_CM.csv"), ',', CSVWriter.NO_QUOTE_CHARACTER);
+                                    writer.writeAll(csvBody);
+                                    writer.flush();
+                                    writer.close();
+                                }
+                            }
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }else if (6 == buttonValue){
+                    mySQLiteAdapter = new DatabaseHelper ();
+                    mySQLiteAdapter.getInstance ();
+                    String contentRead = mySQLiteAdapter.queueAllMC();
+                    mySQLiteAdapter.queueNameMC();
+                    mySQLiteAdapter.close();
+
+                    TABLE_NAME = "TABLE_MC";
+
+                    try {
+                        File file = new File("/sdcard/TABLE_MC.csv");
+                        BufferedReader br = new BufferedReader(new FileReader (file));
+                        while((sCurrentline = br.readLine()) != null ) {
+                            String[] col = sCurrentline.split (",");
+                            onhandList.add (col[1]);
+                        }
+                        for (int i = 0; i < onhandList.size (); i++) {
+                            for (int j = 0; j < onhand.size (); j++) {
+                                if (onhandList.get (i).equals (onhand.get (j))) {
+                                    CSVReader reader = new CSVReader (new FileReader("/sdcard/TABLE_MC.csv"), ',');
+                                    List<String[]> csvBody = reader.readAll();
+                                    int convert = Integer.parseInt (csvBody.get(i)[getIndex]) + 1;
+                                    csvBody.get(i)[getIndex] = String.valueOf (convert);
+                                    reader.close();
+
+                                    CSVWriter writer = new CSVWriter(new FileWriter ("/sdcard/TABLE_MC.csv"), ',', CSVWriter.NO_QUOTE_CHARACTER);
+                                    writer.writeAll(csvBody);
+                                    writer.flush();
+                                    writer.close();
+                                }
+                            }
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }else if (7 == buttonValue){
+                    mySQLiteAdapter = new DatabaseHelper ();
+                    mySQLiteAdapter.getInstance ();
+                    String contentRead = mySQLiteAdapter.queueAllRC();
+                    mySQLiteAdapter.queueNameRC();
+                    mySQLiteAdapter.close();
+
+                    TABLE_NAME = "TABLE_RC";
+
+                    try {
+                        File file = new File("/sdcard/TABLE_RC.csv");
+                        BufferedReader br = new BufferedReader(new FileReader (file));
+                        while((sCurrentline = br.readLine()) != null ) {
+                            String[] col = sCurrentline.split (",");
+                            onhandList.add (col[1]);
+                        }
+                        for (int i = 0; i < onhandList.size (); i++) {
+                            for (int j = 0; j < onhand.size (); j++) {
+                                if (onhandList.get (i).equals (onhand.get (j))) {
+                                    CSVReader reader = new CSVReader (new FileReader("/sdcard/TABLE_RC.csv"), ',');
+                                    List<String[]> csvBody = reader.readAll();
+                                    int convert = Integer.parseInt (csvBody.get(i)[getIndex]) + 1;
+                                    csvBody.get(i)[getIndex] = String.valueOf (convert);
+                                    reader.close();
+
+                                    CSVWriter writer = new CSVWriter(new FileWriter ("/sdcard/TABLE_RC.csv"), ',', CSVWriter.NO_QUOTE_CHARACTER);
+                                    writer.writeAll(csvBody);
+                                    writer.flush();
+                                    writer.close();
+                                }
+                            }
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }else if (8 == buttonValue){
+                    mySQLiteAdapter = new DatabaseHelper ();
+                    mySQLiteAdapter.getInstance ();
+                    String contentRead = mySQLiteAdapter.queueAllSC();
+                    mySQLiteAdapter.queueNameSC();
+                    mySQLiteAdapter.close();
+
+                    TABLE_NAME = "TABLE_SC";
+
+                    try {
+                        File file = new File("/sdcard/TABLE_SC.csv");
+                        BufferedReader br = new BufferedReader(new FileReader (file));
+                        while((sCurrentline = br.readLine()) != null ) {
+                            String[] col = sCurrentline.split (",");
+                            onhandList.add (col[1]);
+                        }
+                        for (int i = 0; i < onhandList.size (); i++) {
+                            for (int j = 0; j < onhand.size (); j++) {
+                                if (onhandList.get (i).equals (onhand.get (j))) {
+                                    CSVReader reader = new CSVReader (new FileReader("/sdcard/TABLE_SC.csv"), ',');
+                                    List<String[]> csvBody = reader.readAll();
+                                    int convert = Integer.parseInt (csvBody.get(i)[getIndex]) + 1;
+                                    csvBody.get(i)[getIndex] = String.valueOf (convert);
+                                    reader.close();
+
+                                    CSVWriter writer = new CSVWriter(new FileWriter ("/sdcard/TABLE_SC.csv"), ',', CSVWriter.NO_QUOTE_CHARACTER);
+                                    writer.writeAll(csvBody);
+                                    writer.flush();
+                                    writer.close();
+                                }
+                            }
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }else if (9 == buttonValue){
+                    mySQLiteAdapter = new DatabaseHelper ();
+                    mySQLiteAdapter.getInstance ();
+                    String contentRead = mySQLiteAdapter.queueAllUM();
+                    mySQLiteAdapter.queueNameUM();
+                    mySQLiteAdapter.close();
+
+                    TABLE_NAME = "TABLE_UM";
+
+                    try {
+                        File file = new File("/sdcard/TABLE_UM.csv");
+                        BufferedReader br = new BufferedReader(new FileReader (file));
+                        while((sCurrentline = br.readLine()) != null ) {
+                            String[] col = sCurrentline.split (",");
+                            onhandList.add (col[1]);
+                        }
+                        for (int i = 0; i < onhandList.size (); i++) {
+                            for (int j = 0; j < onhand.size (); j++) {
+                                if (onhandList.get (i).equals (onhand.get (j))) {
+                                    CSVReader reader = new CSVReader (new FileReader("/sdcard/TABLE_UM.csv"), ',');
+                                    List<String[]> csvBody = reader.readAll();
+                                    int convert = Integer.parseInt (csvBody.get(i)[getIndex]) + 1;
+                                    csvBody.get(i)[getIndex] = String.valueOf (convert);
+                                    reader.close();
+
+                                    CSVWriter writer = new CSVWriter(new FileWriter ("/sdcard/TABLE_UM.csv"), ',', CSVWriter.NO_QUOTE_CHARACTER);
+                                    writer.writeAll(csvBody);
+                                    writer.flush();
+                                    writer.close();
+                                }
+                            }
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }else if (10 == buttonValue){
+                    mySQLiteAdapter = new DatabaseHelper ();
+                    mySQLiteAdapter.getInstance ();
+                    String contentRead = mySQLiteAdapter.queueAllVC();
+                    mySQLiteAdapter.queueNameVC();
+                    mySQLiteAdapter.close();
+
+                    TABLE_NAME = "TABLE_VC";
+
+                    try {
+                        File file = new File("/sdcard/TABLE_VC.csv");
+                        BufferedReader br = new BufferedReader(new FileReader (file));
+                        while((sCurrentline = br.readLine()) != null ) {
+                            String[] col = sCurrentline.split (",");
+                            onhandList.add (col[1]);
+                        }
+                        for (int i = 0; i < onhandList.size (); i++) {
+                            for (int j = 0; j < onhand.size (); j++) {
+                                if (onhandList.get (i).equals (onhand.get (j))) {
+                                    CSVReader reader = new CSVReader (new FileReader("/sdcard/TABLE_VC.csv"), ',');
+                                    List<String[]> csvBody = reader.readAll();
+                                    int convert = Integer.parseInt (csvBody.get(i)[getIndex]) + 1;
+                                    csvBody.get(i)[getIndex] = String.valueOf (convert);
+                                    reader.close();
+
+                                    CSVWriter writer = new CSVWriter(new FileWriter ("/sdcard/TABLE_VC.csv"), ',', CSVWriter.NO_QUOTE_CHARACTER);
+                                    writer.writeAll(csvBody);
+                                    writer.flush();
+                                    writer.close();
+                                }
+                            }
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                startActivity(new Intent (Ingredients.this, SubBF.class));
+            }
+        });
+
+        mDialogno.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
     }
 
     public void bfListView() {
@@ -201,143 +891,6 @@ public class Ingredients extends ListActivity{
         startManagingCursor(cursor);
         myCursorAdapter= new CustomCursorAdapter(this,cursor,buttonValue);
         this.getListView().setAdapter(myCursorAdapter);
-    }
-
-    protected void createDialog() {
-        mDialog = new Dialog (this);
-        mDialog.requestWindowFeature (Window.FEATURE_NO_TITLE);
-        mDialog.setContentView (R.layout.dialog_exit);
-
-        mDialog.setCanceledOnTouchOutside (true);
-        mDialog.setCancelable (true);
-        mDialogyes = ( Button ) mDialog.findViewById (R.id.yes);
-        mDialogno = ( Button ) mDialog.findViewById (R.id.No);
-        mDialogyes.setOnClickListener (new View.OnClickListener () {
-
-            @Override
-            public void onClick(View v) {
-                int buttonValue = Integer.valueOf(getIntent ().getStringExtra("yourcode"));
-                if (1 == buttonValue ) {
-                    //gets the name of the unchecked ingredients and put %20 on every space
-                    mySQLiteAdapter.getInstance ();
-                    mySQLiteAdapter.queueNameBF();
-                    contentRead = mySQLiteAdapter.queueAllBF();
-                    mySQLiteAdapter.queueNameBF ();
-
-                    TABLE_NAME = "TABLE_BF";
-                    myString = contentRead.replaceAll(" ", "%20");
-
-                }else if (2 == buttonValue){
-                    //gets the name of the unchecked ingredients and put %20 on every space
-                    mySQLiteAdapter.getInstance ();
-                    mySQLiteAdapter.queueNameBM ();
-                    contentRead = mySQLiteAdapter.queueAllBM();
-                    mySQLiteAdapter.queueNameBM();
-
-                    TABLE_NAME = "TABLE_BM";
-                    myString = contentRead.replaceAll(" ", "%20");
-
-                }else if (3 == buttonValue){
-                    //gets the name of the unchecked ingredients and put %20 on every space
-                    mySQLiteAdapter.getInstance ();
-                    mySQLiteAdapter.queueNameBC ();
-                    contentRead = mySQLiteAdapter.queueAllBC();
-                    mySQLiteAdapter.queueNameBC();
-
-                    TABLE_NAME = "TABLE_BC";
-                    myString = contentRead.replaceAll(" ", "%20");
-
-
-                }else if (4 == buttonValue){
-                    //gets the name of the unchecked ingredients and put %20 on every space
-                    mySQLiteAdapter.getInstance ();
-                    contentRead = mySQLiteAdapter.queueAllCC ();
-                    mySQLiteAdapter.queueNameCC();
-
-                    TABLE_NAME = "TABLE_CC";
-                    myString = contentRead.replaceAll(" ", "%20");
-
-
-                }else if (5 == buttonValue){
-                    //gets the name of the unchecked ingredients and put %20 on every space
-                    mySQLiteAdapter.getInstance ();
-                    mySQLiteAdapter.queueNameCM ();
-                    contentRead = mySQLiteAdapter.queueAllCM();
-                    mySQLiteAdapter.queueNameCM();
-                    mySQLiteAdapter.close();
-
-                    TABLE_NAME = "TABLE_CM";
-                    myString = contentRead.replaceAll(" ", "%20");
-
-
-                }else if (6 == buttonValue){
-                    //gets the name of the unchecked ingredients and put %20 on every space
-                    mySQLiteAdapter.getInstance ();
-                    mySQLiteAdapter.queueNameMC ();
-                    contentRead = mySQLiteAdapter.queueAllMC();
-                    mySQLiteAdapter.queueNameMC();
-
-                    TABLE_NAME = "TABLE_MC";
-                    myString = contentRead.replaceAll(" ", "%20");
-
-
-                }else if (7 == buttonValue){
-                    //gets the name of the unchecked ingredients and put %20 on every space
-                    mySQLiteAdapter.getInstance ();
-                    mySQLiteAdapter.queueNameRC ();
-                    contentRead = mySQLiteAdapter.queueAllRC();
-                    mySQLiteAdapter.queueNameRC();
-
-                    TABLE_NAME = "TABLE_RC";
-                    myString = contentRead.replaceAll(" ", "%20");
-
-
-                }else if (8 == buttonValue){
-                    //gets the name of the unchecked ingredients and put %20 on every space
-                    mySQLiteAdapter.getInstance ();
-                    mySQLiteAdapter.queueNameSC ();
-                    contentRead = mySQLiteAdapter.queueAllSC();
-                    mySQLiteAdapter.queueNameSC();
-                    mySQLiteAdapter.close();
-
-                    TABLE_NAME = "TABLE_SC";
-                    myString = contentRead.replaceAll(" ", "%20");
-
-
-                }else if (9 == buttonValue){
-                    //gets the name of the unchecked ingredients and put %20 on every space
-                    mySQLiteAdapter.getInstance ();
-                    mySQLiteAdapter.queueNameUM ();
-                    contentRead = mySQLiteAdapter.queueAllUM();
-                    mySQLiteAdapter.queueNameUM();
-
-                    TABLE_NAME = "TABLE_UM";
-                    myString = contentRead.replaceAll(" ", "%20");
-
-
-                }else if (10 == buttonValue){
-                    //gets the name of the unchecked ingredients and put %20 on every space
-                    mySQLiteAdapter.getInstance ();
-                    mySQLiteAdapter.queueNameVC ();
-                    contentRead = mySQLiteAdapter.queueAllVC();
-                    mySQLiteAdapter.queueNameVC();
-
-                    TABLE_NAME = "TABLE_VC";
-                    myString = contentRead.replaceAll(" ", "%20");
-
-                }
-
-                startActivity(new Intent (Ingredients.this, SubBF.class));
-            }
-        });
-
-        mDialogno.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                mDialog.dismiss();
-            }
-        });
     }
 
     public void onBackPressed() {

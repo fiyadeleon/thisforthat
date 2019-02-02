@@ -1,6 +1,5 @@
 package com.example.kenneth.thisforthat;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -58,7 +57,6 @@ public class SignupActivity extends AppCompatActivity {
                         writer.write ("\n");
 
                         writer.flush ();
-                        writer.close ();
 
                         Toast.makeText(getApplicationContext(), "Account Successfully Created ", Toast.LENGTH_LONG).show();
                         startActivity(new Intent (SignupActivity.this, LoginActivity.class));

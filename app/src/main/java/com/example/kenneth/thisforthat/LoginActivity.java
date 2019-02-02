@@ -43,13 +43,14 @@ public class LoginActivity extends AppCompatActivity {
                 // check if the Stored password matches with Password entered by user
                 if (username.equals (col[0]) && password.equals (col[1])) {
                     startActivity(new Intent (LoginActivity.this, MainActivity.class));
+
                     SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
                     SharedPreferences.Editor editor = sp.edit();
                     editor.putString("Username", username);
                     editor.commit();
                     return;
                 } if(!username.equals (col[0]) || !password.equals (col[1])) {
-                    Toast.makeText(getApplicationContext(), "Username or password is incorrect", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "Username or password is incorrect", Toast.LENGTH_SHORT).show();
                 }
             }
         } catch (FileNotFoundException e) {

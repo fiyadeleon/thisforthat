@@ -14,11 +14,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate (savedInstanceState);
         setContentView (R.layout.activity_main);
 
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        String name = sp.getString("Username", "");
-
-        System.out.println (name);
-
     }
 
     public void onClick(View view) {
@@ -70,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
 
         Intent i = new Intent (this, Ingredients.class);
         i.putExtra ("yourcode", code);
-        Toast.makeText (MainActivity.this, name, Toast.LENGTH_SHORT).show ();
         startActivity (i);
     }
 

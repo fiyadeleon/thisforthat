@@ -1,20 +1,15 @@
 package com.example.kenneth.thisforthat;
 
-import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.Build;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -23,12 +18,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.content.ContentValues.TAG;
+import static com.example.kenneth.thisforthat.DatabaseHelper.*;
 import static com.example.kenneth.thisforthat.Ingredients.*;
 
 public class SubBF extends AppCompatActivity {
-    public static List<String> missing = new ArrayList<String>();
-    public static List<String[]> missingData = new ArrayList<String[]>();
+    public static List<String> missing = new ArrayList<String> ();
+    public static List<String[]> missingData = new ArrayList<String[]> ();
 
     BufferedReader br = null;
     TextView data;
@@ -37,12 +32,10 @@ public class SubBF extends AppCompatActivity {
     File file;
     Dialog nDialog;
     Button nDialogyes, nDialogno;
-    String findSub;
-    int index = 0;
-    SQLiteDatabase dh;
 
-    List<String[]> subData = new ArrayList<String[]>();
-    List<String> sub = new ArrayList<String>();
+    List<String[]> subData = new ArrayList<String[]> ();
+    List<String> sub = new ArrayList<String> ();
+    List<String> category = new ArrayList<String> ();
 
     String[][] arrSubData; //string array of all available substitute ingredients
     String[][] arrMissingData; //array for the file ingMissing.csv
@@ -55,49 +48,46 @@ public class SubBF extends AppCompatActivity {
         super.onCreate (savedInstanceState);
         setContentView (R.layout.activity_sub_bf);
 
-        //createDialog ();
+        Button buttonDone = ( Button ) findViewById (R.id.btnDone);
+        buttonDone.setEnabled (true);
 
-        data = (TextView) findViewById(R.id.txtSub);
-        listContent = (TextView )findViewById(R.id.txtAPI);
+        createDialog ();
 
-        arrMissing = new String[missing.size()];
-        missing.toArray(arrMissing);
+        data = ( TextView ) findViewById (R.id.txtData);
+        listContent = ( TextView ) findViewById (R.id.txtAPI);
 
-        arrSub = new String[missing.size()];
-        sub.toArray(arrSub);
+        arrMissing = new String[missing.size ()];
+        missing.toArray (arrMissing);
+        System.out.println (missing.size ());
 
-        missingData.clear ();
+        arrOnhand = new String[onhand.size ()];
+        onhand.toArray (arrOnhand);
+
+        arrSub = new String[missing.size ()];
+        sub.toArray (arrSub);
+
         getSubData ();
-        getMissingData ();
+        //getMissingData ();
 
-        listContent.setText (arrMissing[0]);
-        findSub = arrMissing[0];
-
-        displaySub ();
+        //displaySub ();
         //compareData ();
     }
 
-    private void displaySub(){
-        //dito tinatawag ung method for algo
-        //System.out.println (arrSubData[1][0]);
-        sub.clear ();
-        findSub = arrMissing[0];
-        for(int i = 0; i < subData.size ()-1; i++) {
-            if (findSub.equals(arrSubData[i][0])) {
-                //ingredient's name
-                biDi ();
-                //compareData ();
-                break;
-            }
-        }
+    private void displaySub() {
+        listContent.setText (arrMissing[0]);
+
+        ListView listView = ( ListView ) findViewById (R.id.listViewExample);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String> (this, android.R.layout.simple_list_item_multiple_choice, sub);
+        listView.setAdapter (arrayAdapter);
     }
 
-    private void getSubData(){
+    private void getSubData() {
         //kinukuha nitong method na to ung values ng column na name at subname ng mga sub ing
         //tas iniistore sa array list
+
         try {
-            file = new File("/sdcard/"+TABLE_NAME+".csv");
-            br = new BufferedReader(new FileReader (file));
+            file = new File ("/sdcard/" + TABLE_NAME + ".csv");
+            br = new BufferedReader (new FileReader (file));
 
             while ((sCurrentline = br.readLine ()) != null) {
                 subData.add (sCurrentline.split (","));
@@ -106,20 +96,31 @@ public class SubBF extends AppCompatActivity {
             e.printStackTrace ();
         }
 
-        arrSubData = new String[subData.size()][];
-        subData.toArray(arrSubData);
+        arrSubData = new String[subData.size ()][];
+        subData.toArray (arrSubData);
+
+        System.out.println (subData.size ());
+        biDi ();
     }
 
-    private void getMissingData(){
+    private void getMissingData() {
         //kinukuha nitong method na to ung values ng column na name at subname ng mga missing ing
         //tas iniistore sa array list
         try {
-            String pathName = TABLE_NAME+"/"+arrMissing[0];
-            file = new File("/sdcard/"+pathName+".csv");
-            br = new BufferedReader(new FileReader (file));
+            String pathName = TABLE_NAME + "/" + arrMissing[0];
+            file = new File ("/sdcard/" + pathName + ".csv");
+            if (file.exists ()) {
+                br = new BufferedReader (new FileReader (file));
 
-            while ((sCurrentline = br.readLine ()) != null) {
-                missingData.add (sCurrentline.split (","));
+                sCurrentline = br.readLine ();
+                sCurrentline = br.readLine ();
+                while ((sCurrentline = br.readLine ()) != null) {
+                    missingData.add (sCurrentline.split (","));
+                }
+
+                displaySub ();
+            } else {
+                data.setText ("No available substitute ingredient");
             }
         } catch (IOException e) {
             e.printStackTrace ();
@@ -131,51 +132,77 @@ public class SubBF extends AppCompatActivity {
 
     public void biDi() {
         int start = 0;
-        int end = subData.size()-1;
+        int end = subData.size () - 1;
 
-        int path = 0;
-        int index = 0;
-        for (int i = 0; (i < (subData.size () / 2)); i++) {
-            if (findSub.equals (arrSubData[start][0])) {
-                System.out.println ("start " +arrSubData[start+1][1]);
-                sub.add(arrSubData[start+1][1]);
+        for (int j = 0; (j < (subData.size () / 2)); j++) {
+            System.out.println ("missing "+ missing.get (0));
+            System.out.println ("start1 " + arrSubData[start][1]);
+            System.out.println ("end1 " + arrSubData[end][1]);
+            if ((missing.get (0).trim()).equals (arrSubData[start][1])) {
+                System.out.println ("pumasok start");
+                System.out.println ("start " + arrSubData[start][0]);
+                String cat = arrSubData[start][0];
+                try {
+                    file = new File ("/sdcard/" + TABLE_NAME + ".csv");
+                    br = new BufferedReader (new FileReader (file));
+
+                    while ((sCurrentline = br.readLine ()) != null) {
+                        String[] col = (sCurrentline.split (","));
+                        if (cat.equals (col[0])) {
+                            System.out.println ("start1 " + col[1]);
+                            sub.add (col[1]);
+                        }
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace ();
+                }
 
             }
-            if (findSub.equals (arrSubData[end][0])) {
-                System.out.println ("end " +arrSubData[end+1][1]);
-                sub.add(arrSubData[end+1][1]);
+            if ((missing.get (0).trim()).equals (arrSubData[end][1])) {
+                System.out.println ("pumasok end");
+                System.out.println ("end " + arrSubData[end][1]);
+                String cat = arrSubData[end][0];
+                try {
+                    file = new File ("/sdcard/" + TABLE_NAME + ".csv");
+                    br = new BufferedReader (new FileReader (file));
 
+                    while ((sCurrentline = br.readLine ()) != null) {
+                        String[] col = (sCurrentline.split (","));
+                        if (cat.equals (col[0])) {
+                            System.out.println ("end1 " + col[1]);
+                            sub.add (col[1]);
+                        }
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace ();
+                }
             }
 
             start++;
             end--;
-            //path++;
         }
-        if(sub.size ()!=0){
-            data.setText(sub.get (0));
-        }else{
-            data.setText("No available substitute ingredient");
-        }
+
+        displaySub ();
     }
 
-    private void compareData(){
+    private void compareData() {
         int subColLength = arrSubData[0].length;
 
         int missingColLength = arrMissingData[0].length;
         int missingRowLength = arrMissingData.length;
-        int missing = missingColLength-1;
+        int missing = missingColLength - 1;
 
         int startCount = 2;
         int endCount = subColLength - 1;
 
 
         System.out.println ("BAKET");
-        if(missingColLength==1 && missingRowLength==2) {
+        if (missingColLength == 1 && missingRowLength == 2) {
             System.out.println ("1");
             for (int i = 0; (i < subColLength / 2); i++) {
                 if (arrMissingData[0][0].equals (arrSubData[0][startCount])) {
                     System.out.println ("start " + arrSubData[1][startCount]);
-                    sub.add(arrSubData[1][startCount]);
+                    sub.add (arrSubData[1][startCount]);
                 }
                 if (arrMissingData[0][0].equals (arrSubData[0][endCount])) {
                     System.out.println ("end " + arrSubData[1][endCount]);
@@ -184,7 +211,7 @@ public class SubBF extends AppCompatActivity {
                 startCount++;
                 endCount--;
             }
-        }else if(missingColLength>1 && missingRowLength==2) {
+        } else if (missingColLength > 1 && missingRowLength == 2) {
             System.out.println ("2");
             for (int j = 0; (j < missingColLength - 1); j++) {
                 String findStart = arrMissingData[0][j];
@@ -206,48 +233,8 @@ public class SubBF extends AppCompatActivity {
     }
 
     public void onBackPressed() {
-        mDialog.dismiss();
-        //nDialog.show ();
-        Intent backToHomeActivityIntent = new Intent(SubBF.this, Ingredients.class);
-        backToHomeActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        startActivity(backToHomeActivityIntent);
-    }
-
-    public void onSelect(View view){
-        for(int i = 1; i < missing.size (); i++) {
-            if (missing.size () != 0) {
-                findSub = arrMissing[i];
-                index = i;
-
-                listContent.setText (arrMissing[i]);
-                System.out.println (arrMissing[i]);
-
-                for(int j = 0; j < subData.size ()-1; j++) {
-                    if (arrMissing[index].equals(arrSubData[j][0])) {
-                        //ingredient's name
-                        biDi ();
-                        //compareData ();
-                        break;
-                    }
-                }
-            } else {
-                data.setText ("No available substitute ingredient");
-            }
-        }
-    }
-
-    public void onNext(View view){
-        sub.clear ();
-        missing.remove (0);
-        if(sub.size ()!=0){
-            data.setText(sub.get (1));
-        }else{
-            data.setText("No available substitute ingredient");
-        }
-    }
-
-    public void onUtensils(View view){
-
+        mDialog.dismiss ();
+        nDialog.show ();
     }
 
     protected void createDialog() {
@@ -263,37 +250,64 @@ public class SubBF extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                startActivity(new Intent (SubBF.this, MainActivity.class));
+                startActivity (new Intent (SubBF.this, MainActivity.class));
             }
         });
 
-        nDialogno.setOnClickListener(new View.OnClickListener() {
+        nDialogno.setOnClickListener (new View.OnClickListener () {
 
             @Override
             public void onClick(View v) {
-                nDialog.dismiss();
+                nDialog.dismiss ();
             }
         });
     }
 
-    public boolean isStoragePermissionGranted() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED) {
-                Log.v(TAG,"Permission is granted");
-                return true;
-            } else {
-
-                Log.v(TAG,"Permission is revoked");
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-                return false;
-            }
-        }
-        else { //permission is automatically granted on sdk<23 upon installation
-            Log.v(TAG,"Permission is granted");
-            return true;
-        }
+    public void onDone(View view){
+        startActivity(new Intent (SubBF.this, MainActivity.class));
     }
+
+    public void onNext(View view){/*
+        try {
+            File file = new File("/sdcard/TABLE_BF.csv");
+            BufferedReader br = new BufferedReader(new FileReader (file));
+            while((sCurrentline = br.readLine()) != null ) {
+                String[] col = sCurrentline.split (",");
+                onhandList.add (col[1]);
+            }
+            for (int i = 0; i < onhandList.size (); i++) {
+                System.out.println (onhandList.get (i));
+                System.out.println (subList.get (0));
+                if (onhandList.get (i).equals (subList.get (0))) {
+                    CSVReader reader = new CSVReader (new FileReader("/sdcard/TABLE_BF.csv"), ',');
+                    //niread nya buong csv file
+                    List<String[]> csvBody = reader.readAll();
+                    //kinuha nya ung index na nakalaan para sa user at nag add ng isa
+                    //for everytime na meron si user nung ingredient
+                    int convert = Integer.parseInt (csvBody.get(i)[3]) + 1;
+
+                    //cinonvert ulit sa string para isave
+                    csvBody.get(i)[3] = String.valueOf(convert);
+                    reader.close();
+
+                    CSVWriter writer = new CSVWriter(new FileWriter ("/sdcard/TABLE_BF.csv"), ',');
+                    writer.writeAll(csvBody);
+                    writer.flush();
+                    writer.close();
+                }
+
+            }
+
+            getSubData ();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
+
+        getSubData ();
+    }
+
 }
+
 
 

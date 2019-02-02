@@ -7,20 +7,20 @@
     tools:context=".SubBF">
 
     <TextView
-        android:id="@+id/txtAPI"
-        android:layout_width="295dp"
+        android:id="@+id/txtIngredient"
+        android:layout_width="370dp"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="53dp"
+        android:layout_marginTop="54dp"
         android:fontFamily="@font/oswald_bold"
         android:gravity="center_horizontal"
-        android:text="ing name"
+        android:text="INGREDIENTS"
         android:textIsSelectable="false"
-        android:textSize="24sp" />
+        android:textSize="35sp" />
 
     <ListView
-        android:id="@+id/listViewExample"
+        android:id="@+id/listView"
         android:layout_width="310dp"
         android:layout_height="297dp"
         android:layout_alignParentBottom="true"
@@ -28,7 +28,7 @@
         android:layout_marginBottom="83dp"
         android:layout_marginLeft="5dp"
         android:layout_weight="1"
-        android:choiceMode="singleChoice"
+        android:choiceMode="multipleChoice"
         android:clickable="true"
         android:dividerHeight="5dp"
         android:textSize="16dp" />
@@ -37,28 +37,13 @@
         android:id="@+id/btnDone"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/btnNext"
-        android:layout_marginEnd="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
         android:background="@drawable/button_shape"
         android:fontFamily="@font/oswald_light"
         android:text="DONE"
-        android:onClick="onDone"
-        android:textColor="@color/colorPrimary"
-        android:textColorLink="@color/colorPrimaryDark" />
-
-    <Button
-        android:id="@+id/btnNext"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="20dp"
-        android:layout_marginStart="30dp"
-        android:background="@drawable/button_select"
-        android:fontFamily="@font/oswald_light"
-        android:text="NEXT"
-        android:onClick="onNext"
+        android:onClick="onContinue"
         android:textColor="@color/colorPrimary"
         android:textColorLink="@color/colorPrimaryDark" />
 
