@@ -140,7 +140,7 @@ public class Ingredients extends ListActivity{
                         System.out.println ("puro zero");
                         bmListView ();
                     }else{
-                        //startActivity(new Intent (Ingredients.this, NewIngredients.class));
+                        startActivity(new Intent (Ingredients.this, NewIngredients.class));
                     }
                 }
 
@@ -167,7 +167,7 @@ public class Ingredients extends ListActivity{
                         System.out.println ("puro zero");
                         bcListView ();
                     }else{
-                        //startActivity(new Intent (Ingredients.this, NewIngredients.class));
+                        startActivity(new Intent (Ingredients.this, NewIngredients.class));
                     }
                 }
 
@@ -194,7 +194,7 @@ public class Ingredients extends ListActivity{
                         System.out.println ("puro zero");
                         ccListView ();
                     }else{
-                        //startActivity(new Intent (Ingredients.this, NewIngredients.class));
+                        startActivity(new Intent (Ingredients.this, NewIngredients.class));
                     }
                 }
 
@@ -221,7 +221,7 @@ public class Ingredients extends ListActivity{
                         System.out.println ("puro zero");
                         cmListView ();
                     }else{
-                        //startActivity(new Intent (Ingredients.this, NewIngredients.class));
+                        startActivity(new Intent (Ingredients.this, NewIngredients.class));
                     }
                 }
 
@@ -248,7 +248,7 @@ public class Ingredients extends ListActivity{
                         System.out.println ("puro zero");
                         mcListView ();
                     }else{
-                        //startActivity(new Intent (Ingredients.this, NewIngredients.class));
+                        startActivity(new Intent (Ingredients.this, NewIngredients.class));
                     }
                 }
 
@@ -275,7 +275,7 @@ public class Ingredients extends ListActivity{
                         System.out.println ("puro zero");
                         rcListView ();
                     }else{
-                        //startActivity(new Intent (Ingredients.this, NewIngredients.class));
+                        startActivity(new Intent (Ingredients.this, NewIngredients.class));
                     }
                 }
 
@@ -302,7 +302,7 @@ public class Ingredients extends ListActivity{
                         System.out.println ("puro zero");
                         scListView ();
                     }else{
-                        //startActivity(new Intent (Ingredients.this, NewIngredients.class));
+                        startActivity(new Intent (Ingredients.this, NewIngredients.class));
                     }
                 }
 
@@ -329,7 +329,7 @@ public class Ingredients extends ListActivity{
                         System.out.println ("puro zero");
                         umListView ();
                     }else{
-                        //startActivity(new Intent (Ingredients.this, NewIngredients.class));
+                        startActivity(new Intent (Ingredients.this, NewIngredients.class));
                     }
                 }
 
@@ -356,7 +356,7 @@ public class Ingredients extends ListActivity{
                         System.out.println ("puro zero");
                         vcListView ();
                     }else{
-                        //startActivity(new Intent (Ingredients.this, NewIngredients.class));
+                        startActivity(new Intent (Ingredients.this, NewIngredients.class));
                     }
                 }
 
@@ -370,7 +370,6 @@ public class Ingredients extends ListActivity{
         checkUser ();
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         final int getIndex = sp.getInt ("Index", 0);
-        System.out.println (getIndex);
 
         mDialog = new Dialog (this);
         mDialog.requestWindowFeature (Window.FEATURE_NO_TITLE);

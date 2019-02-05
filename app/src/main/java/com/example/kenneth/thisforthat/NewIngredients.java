@@ -1,39 +1,62 @@
 package com.example.kenneth.thisforthat;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-
-
-import com.squareup.okhttp.Headers;
-
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
-public class NewIngredients extends AppCompatActivity {
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
+
+import static com.example.kenneth.thisforthat.DatabaseHelper.onhand;
+
+public class NewIngredients extends Activity implements OnClickListener {
+    ListView mListView;
+    Button btnShowCheckedItems;
+    CustomAdapter<IngredientsHolder> mAdapter;
+    public static Dialog mDialog;
+    public Button mDialogyes, mDialogno;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate (savedInstanceState);
-        setContentView (R.layout.activity_new_ingredients);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_new_ingredients);
 
-        readCSV ();
+        mListView = (ListView) findViewById(android.R.id.list);
+        btnShowCheckedItems = (Button) findViewById(R.id.btnContinue);
+
+        init();
+        addListeners();
+        createDialog();
     }
 
-    public void readCSV(){
+    private void init() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        final String getName = sp.getString ("btnName", "");
         List<IngredientsHolder> data = new ArrayList<> ();
         try {
             String sCurrentline = null;
-            BufferedReader br = new BufferedReader(new FileReader ("/sdcard/TABLE_BF.csv"));
+            BufferedReader br = new BufferedReader(new FileReader ("/sdcard/"+getName+".csv"));
             sCurrentline = br.readLine ();
             while ((sCurrentline = br.readLine()) != null) {
                 String[] arr = sCurrentline.split(",");
@@ -85,6 +108,53 @@ public class NewIngredients extends AppCompatActivity {
 
         List<IngredientsHolder> newMain = main.stream().distinct().collect(Collectors.toList());
         ListView lv = (ListView) findViewById(R.id.list);
-        lv.setAdapter(new CustomAdapter(NewIngredients.this,newMain));
+
+        mAdapter = new CustomAdapter<IngredientsHolder>(this, ( ArrayList<IngredientsHolder> ) newMain);
+        lv.setAdapter(mAdapter);
+    }
+
+    private void addListeners() {
+        btnShowCheckedItems.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        /*if(mAdapter != null) {
+            ArrayList<IngredientsHolder> mArrayProducts = mAdapter.getCheckedItems();
+            Log.d(MainActivity.class.getSimpleName(), "Selected Items: " + mArrayProducts.toString());
+            Toast.makeText(getApplicationContext(), "Selected Items: " + mArrayProducts.toString(), Toast.LENGTH_LONG).show();
+        }*/
+
+    }
+
+    protected void createDialog() {
+        mDialog = new Dialog (this);
+        mDialog.requestWindowFeature (Window.FEATURE_NO_TITLE);
+        mDialog.setContentView (R.layout.dialog_exit);
+
+        mDialog.setCanceledOnTouchOutside (true);
+        mDialog.setCancelable (true);
+        mDialogyes = ( Button ) mDialog.findViewById (R.id.yes);
+        mDialogno = ( Button ) mDialog.findViewById (R.id.No);
+        mDialogyes.setOnClickListener (new View.OnClickListener () {
+
+            @Override
+            public void onClick(View v) {
+                ArrayList<IngredientsHolder> mArrayProducts = mAdapter.getCheckedItems();
+                startActivity(new Intent (NewIngredients.this, NewSubBF.class));
+            }
+        });
+
+        mDialogno.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+    }
+
+    public void onBackPressed() {
+        startActivity(new Intent (NewIngredients.this, MainActivity.class));
     }
 }

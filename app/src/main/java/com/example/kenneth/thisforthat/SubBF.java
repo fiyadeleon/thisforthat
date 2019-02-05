@@ -2,19 +2,27 @@ package com.example.kenneth.thisforthat;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +44,8 @@ public class SubBF extends AppCompatActivity {
 
     List<String[]> subData = new ArrayList<String[]> ();
     List<String> sub = new ArrayList<String> ();
-    List<String> category = new ArrayList<String> ();
+    List<String> onhandList = new ArrayList<String> ();
+    List<String> subList = new ArrayList<String> ();
 
     String[][] arrSubData; //string array of all available substitute ingredients
     String[][] arrMissingData; //array for the file ingMissing.csv
@@ -67,17 +76,35 @@ public class SubBF extends AppCompatActivity {
 
         listContent.setText (missing.get(0));
         getSubData ();
-        //getMissingData ();
-
-        //displaySub ();
-        //compareData ();
     }
 
     private void displaySub() {
-
+        subList.clear ();
+        if(sub.size ()!=0) {
         ListView listView = ( ListView ) findViewById (R.id.listViewExample);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String> (this, android.R.layout.simple_list_item_multiple_choice, sub);
         listView.setAdapter (arrayAdapter);
+
+            listView.setOnItemClickListener (new AdapterView.OnItemClickListener () {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
+                    Object clickItemObj = adapterView.getAdapter ().getItem (index);
+                    String strItem = clickItemObj.toString ();
+                    SparseBooleanArray checked = listView.getCheckedItemPositions();
+                    if(checked.get(index)){
+                        subList.add(strItem);
+                    }
+                    else{
+                        subList.remove(strItem);
+                    }
+                }
+            });
+
+        }else{
+            data.setText ("No available substitute ingredient");
+        }
+
+        System.out.println ("subList size "+subList.size ());
     }
 
     private void getSubData() {
@@ -99,7 +126,6 @@ public class SubBF extends AppCompatActivity {
         arrSubData = new String[subData.size ()][];
         subData.toArray (arrSubData);
 
-        System.out.println (subData.size ());
         biDi ();
     }
 
@@ -263,42 +289,38 @@ public class SubBF extends AppCompatActivity {
         startActivity(new Intent (SubBF.this, MainActivity.class));
     }
 
-    public void onNext(View view){/*
+    public void onNext(View view){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        final int getIndex = sp.getInt ("Index", 0);
+        onhandList.clear ();
+
         try {
-            File file = new File("/sdcard/TABLE_BF.csv");
+            File file = new File("/sdcard/" + TABLE_NAME + ".csv");
             BufferedReader br = new BufferedReader(new FileReader (file));
             while((sCurrentline = br.readLine()) != null ) {
                 String[] col = sCurrentline.split (",");
                 onhandList.add (col[1]);
             }
             for (int i = 0; i < onhandList.size (); i++) {
-                System.out.println (onhandList.get (i));
-                System.out.println (subList.get (0));
-                if (onhandList.get (i).equals (subList.get (0))) {
-                    CSVReader reader = new CSVReader (new FileReader("/sdcard/TABLE_BF.csv"), ',');
-                    //niread nya buong csv file
-                    List<String[]> csvBody = reader.readAll();
-                    //kinuha nya ung index na nakalaan para sa user at nag add ng isa
-                    //for everytime na meron si user nung ingredient
-                    int convert = Integer.parseInt (csvBody.get(i)[3]) + 1;
+                for (int j = 0; j < subList.size (); j++) {
+                    if (onhandList.get (i).equals (subList.get (j))) {
+                        CSVReader reader = new CSVReader (new FileReader (file), ',');
+                        List<String[]> csvBody = reader.readAll ();
+                        int convert = Integer.parseInt (csvBody.get (i)[getIndex]) + 1;
+                        csvBody.get (i)[getIndex] = String.valueOf (convert);
+                        reader.close ();
 
-                    //cinonvert ulit sa string para isave
-                    csvBody.get(i)[3] = String.valueOf(convert);
-                    reader.close();
-
-                    CSVWriter writer = new CSVWriter(new FileWriter ("/sdcard/TABLE_BF.csv"), ',');
-                    writer.writeAll(csvBody);
-                    writer.flush();
-                    writer.close();
+                        CSVWriter writer = new CSVWriter (new FileWriter (file), ',', CSVWriter.NO_QUOTE_CHARACTER);
+                        writer.writeAll (csvBody);
+                        writer.flush ();
+                        writer.close ();
+                    }
                 }
-
             }
-
-            getSubData ();
 
         } catch (IOException e) {
             e.printStackTrace();
-        }*/
+        }
 
         missing.remove (0);
         if(missing.size()!=0) {

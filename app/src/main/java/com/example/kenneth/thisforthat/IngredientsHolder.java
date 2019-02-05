@@ -15,8 +15,12 @@ public class IngredientsHolder {
         return name;
     }
 
-    public String toString() {
+    public String getSubName() {
         return subName;
+    }
+
+    public String toString() {
+        return this.subName;
     }
 
     public int getAdmin() {

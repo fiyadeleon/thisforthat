@@ -22,49 +22,55 @@ public class MainActivity extends AppCompatActivity {
         switch (view.getId ()) {
             case R.id.btnBlackForest:
                 code = "1";
-                name = "Black Forest";
+                name = "TABLE_BF";
                 break;
             case R.id.btnBrazodeMercedes:
                 code = "2";
-                name = "Brazo de Mercedes";
+                name = "TABLE_BM";
                 break;
             case R.id.btnBlueberryCheesecake:
                 code = "3";
-                name = "Blueberry Cheesecake";
+                name = "TABLE_BC";
                 break;
             case R.id.btnChocolate:
                 code = "4";
-                name = "Chocolate Cake";
+                name = "TABLE_CC";
                 break;
             case R.id.btnChocolateMousse:
                 code = "5";
-                name = "Chocolate Mousse";
+                name = "TABLE_CM";
                 break;
             case R.id.btnMocha:
                 code = "6";
-                name = "Mocha Cake";
+                name = "TABLE_MC";
                 break;
             case R.id.btnRice:
                 code = "7";
-                name = "Rice Cake";
+                name = "TABLE_RC";
                 break;
             case R.id.btnStrawberry:
                 code = "8";
-                name = "Strawberry Cake";
+                name = "TABLE_SC";
                 break;
             case R.id.btnUbe:
                 code = "9";
-                name = "Ube Macapuno";
+                name = "TABLE_UM";
                 break;
             case R.id.btnVanilla:
                 code = "10";
-                name = "Vanilla Cake";
+                name = "TABLE_VC";
                 break;
 
         }
 
         Intent i = new Intent (this, Ingredients.class);
         i.putExtra ("yourcode", code);
+        i.putExtra ("btnName", name);
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString ("btnName", name);
+        editor.commit();
         startActivity (i);
     }
 
