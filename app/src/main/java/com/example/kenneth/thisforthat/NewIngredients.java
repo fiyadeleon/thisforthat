@@ -1,87 +1,90 @@
 package com.example.kenneth.thisforthat;
 
-import android.app.Dialog;
-import android.content.ContentValues;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.SparseBooleanArray;
-import android.view.View;
-import android.view.Window;
-import android.widget.AdapterView;
+import android.os.Bundle;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.opencsv.CSVReader;
-import com.opencsv.CSVWriter;
+
+import com.squareup.okhttp.Headers;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class NewIngredients extends AppCompatActivity {
-    public Button mDialogyes, mDialogno;
-
-    public static String TABLE_NAME;
-    public static Dialog mDialog;
-
-    int buttonValue;
-    Cursor cursor;
-    ContentValues values;
-    String data = "";
-    String sCurrentline;
-    boolean found = false;
-    int index = 0;
-    ListView listView;
-
-    List<String> ingList = new ArrayList<String> ();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate (savedInstanceState);
         setContentView (R.layout.activity_new_ingredients);
-        values = new ContentValues ();
 
-        listView = ( ListView ) findViewById (R.id.listView);
-        ingList.add ("1 1/4 tablespoon wheat flour and 3/4 tablespoon cake flour");
-        ingList.add ("1/4 teaspoon of baking soda and 1/2 cup of plain yogurt");
-        ingList.add ("1 cup brewed coffee");
-        ingList.add ("2 teaspoons baking soda");
-        ingList.add ("1/2 cup cherry liqueur");
-        ingList.add ("1/2 cup cherry extra");
-        ingList.add ("2 pieces egg");
-        ingList.add ("1 cup milk");
-        ingList.add ("1 tablespoon vinegar");
-        ingList.add ("2 cups white sugar");
-        ingList.add ("3/4 cup unsweetened cocoa powder");
-        ingList.add ("1/2 teaspoon salt");
-        ingList.add ("1/2 cup vegetable oil");
-        ingList.add ("1 teaspoon vanilla extract");
-        ingList.add ("1 can cherry pie filling");
-
-        listView();
+        readCSV ();
     }
 
-    public void listView(){
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String> (this, android.R.layout.simple_list_item_multiple_choice, ingList);
-        listView.setAdapter (arrayAdapter);
-    }
+    public void readCSV(){
+        List<IngredientsHolder> data = new ArrayList<> ();
+        try {
+            String sCurrentline = null;
+            BufferedReader br = new BufferedReader(new FileReader ("/sdcard/TABLE_BF.csv"));
+            sCurrentline = br.readLine ();
+            while ((sCurrentline = br.readLine()) != null) {
+                String[] arr = sCurrentline.split(",");
+                IngredientsHolder ingredient = new IngredientsHolder(arr[0], arr[1], arr[2]);
+                data.add(ingredient);
+            }
+            br.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-    public void onContinue(View view){
-        startActivity(new Intent (NewIngredients.this, MainActivity.class));
-    }
+        Map<String, List<IngredientsHolder>> ingredientsByName = data.stream().collect(Collectors.groupingBy(IngredientsHolder::getName));
 
-    public void onBackPressed(){
-        startActivity(new Intent (NewIngredients.this, MainActivity.class));
-    }
+        List<IngredientsHolder> main = new ArrayList<>();
+        List<IngredientsHolder> other = new ArrayList<>();
 
+        //Sort on `admin` in descending order
+        Comparator<IngredientsHolder> comparator = Comparator.comparing(IngredientsHolder:: getAdmin, (i1, i2) -> {
+            if (i2 > i1) {
+                return -1;
+            } else if (i2 < i1) {
+                return 1;
+            }
+            return 0;
+
+        });
+
+        //Go through each list (ingredient) and find the one with max `admin` value
+        //and add it to the `main` list then add the rest to `other`
+        ingredientsByName.forEach( (k, group) -> {
+            IngredientsHolder max = group.stream().max(comparator).get();
+            if (max.getAdmin() == 0) {
+                max = group.get(0);
+            }if(max.getAdmin () > 0){
+                //group.forEach(System.out::println);
+                int value = max.getAdmin ();
+
+                List<IngredientsHolder> filtered = (group.stream()
+                        .filter(mc -> mc.getAdmin() == value)
+                        .collect(Collectors.toList()));
+                //filtered.forEach(mc -> System.out.println (mc.toString ()));
+            }
+
+            main.add(max);
+            group.remove(max);
+            other.addAll(group);
+            System.out.println (other.size ());
+        });
+
+        List<IngredientsHolder> newMain = main.stream().distinct().collect(Collectors.toList());
+        ListView lv = (ListView) findViewById(R.id.list);
+        lv.setAdapter(new CustomAdapter(NewIngredients.this,newMain));
+    }
 }

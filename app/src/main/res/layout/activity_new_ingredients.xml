@@ -1,58 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SubBF">
+    android:background="#FFF">
+
+    <ListView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="549dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="116dp"
+        android:layout_weight="1"
+        android:background="#FFFFFF" />
+
+    <Button
+        android:id="@+id/btnContinue"
+        android:layout_width="130dp"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="13dp"
+        android:background="@drawable/button_shape"
+        android:fontFamily="@font/oswald_light"
+        android:onClick="onContinue"
+        android:text="Continue"
+        android:textColor="@color/colorPrimary"
+        android:textColorLink="@color/colorPrimaryDark"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/txtIngredient"
-        android:layout_width="370dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="54dp"
-        android:fontFamily="@font/oswald_bold"
-        android:gravity="center_horizontal"
-        android:text="INGREDIENTS"
-        android:textIsSelectable="false"
-        android:textSize="35sp" />
-
-    <ListView
-        android:id="@+id/listView"
-        android:layout_width="310dp"
-        android:layout_height="297dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="83dp"
-        android:layout_marginLeft="5dp"
-        android:layout_weight="1"
-        android:choiceMode="multipleChoice"
-        android:clickable="true"
-        android:dividerHeight="5dp"
-        android:textSize="16dp" />
-
-    <Button
-        android:id="@+id/btnDone"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/button_shape"
-        android:fontFamily="@font/oswald_light"
-        android:text="DONE"
-        android:onClick="onContinue"
-        android:textColor="@color/colorPrimary"
-        android:textColorLink="@color/colorPrimaryDark" />
-
-    <TextView
-        android:id="@+id/txtData"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:fontFamily="@font/oswald_light"
-        android:textSize="18sp" />
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="45dp"
+        android:fontFamily="@font/oswald_bold"
+        android:text="INGREDIENTS"
+        android:textSize="45sp" />
 
 </RelativeLayout>

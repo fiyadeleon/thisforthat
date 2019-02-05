@@ -2,6 +2,7 @@ package com.example.kenneth.thisforthat;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -49,16 +50,14 @@ public class SubBF extends AppCompatActivity {
         setContentView (R.layout.activity_sub_bf);
 
         Button buttonDone = ( Button ) findViewById (R.id.btnDone);
-        buttonDone.setEnabled (true);
+        Button buttonNext = ( Button ) findViewById (R.id.btnNext);
+        buttonDone.setVisibility(View.GONE);
+        buttonNext.setVisibility(View.VISIBLE);
 
         createDialog ();
 
         data = ( TextView ) findViewById (R.id.txtData);
         listContent = ( TextView ) findViewById (R.id.txtAPI);
-
-        arrMissing = new String[missing.size ()];
-        missing.toArray (arrMissing);
-        System.out.println (missing.size ());
 
         arrOnhand = new String[onhand.size ()];
         onhand.toArray (arrOnhand);
@@ -66,6 +65,7 @@ public class SubBF extends AppCompatActivity {
         arrSub = new String[missing.size ()];
         sub.toArray (arrSub);
 
+        listContent.setText (missing.get(0));
         getSubData ();
         //getMissingData ();
 
@@ -74,7 +74,6 @@ public class SubBF extends AppCompatActivity {
     }
 
     private void displaySub() {
-        listContent.setText (arrMissing[0]);
 
         ListView listView = ( ListView ) findViewById (R.id.listViewExample);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String> (this, android.R.layout.simple_list_item_multiple_choice, sub);
@@ -85,6 +84,7 @@ public class SubBF extends AppCompatActivity {
         //kinukuha nitong method na to ung values ng column na name at subname ng mga sub ing
         //tas iniistore sa array list
 
+        subData.clear ();
         try {
             file = new File ("/sdcard/" + TABLE_NAME + ".csv");
             br = new BufferedReader (new FileReader (file));
@@ -134,13 +134,9 @@ public class SubBF extends AppCompatActivity {
         int start = 0;
         int end = subData.size () - 1;
 
-        for (int j = 0; (j < (subData.size () / 2)); j++) {
-            System.out.println ("missing "+ missing.get (0));
-            System.out.println ("start1 " + arrSubData[start][1]);
-            System.out.println ("end1 " + arrSubData[end][1]);
+        sub.clear ();
+        for (int j = 0; (j < (subData.size () / 2)+1); j++) {
             if ((missing.get (0).trim()).equals (arrSubData[start][1])) {
-                System.out.println ("pumasok start");
-                System.out.println ("start " + arrSubData[start][0]);
                 String cat = arrSubData[start][0];
                 try {
                     file = new File ("/sdcard/" + TABLE_NAME + ".csv");
@@ -149,18 +145,18 @@ public class SubBF extends AppCompatActivity {
                     while ((sCurrentline = br.readLine ()) != null) {
                         String[] col = (sCurrentline.split (","));
                         if (cat.equals (col[0])) {
-                            System.out.println ("start1 " + col[1]);
+                            System.out.println ("savedS " + col[1]);
                             sub.add (col[1]);
                         }
                     }
+                    displaySub ();
+                    return;
                 } catch (IOException e) {
                     e.printStackTrace ();
                 }
 
             }
             if ((missing.get (0).trim()).equals (arrSubData[end][1])) {
-                System.out.println ("pumasok end");
-                System.out.println ("end " + arrSubData[end][1]);
                 String cat = arrSubData[end][0];
                 try {
                     file = new File ("/sdcard/" + TABLE_NAME + ".csv");
@@ -169,10 +165,12 @@ public class SubBF extends AppCompatActivity {
                     while ((sCurrentline = br.readLine ()) != null) {
                         String[] col = (sCurrentline.split (","));
                         if (cat.equals (col[0])) {
-                            System.out.println ("end1 " + col[1]);
+                            System.out.println ("savedE " + col[1]);
                             sub.add (col[1]);
                         }
                     }
+                    displaySub ();
+                    return;
                 } catch (IOException e) {
                     e.printStackTrace ();
                 }
@@ -181,8 +179,6 @@ public class SubBF extends AppCompatActivity {
             start++;
             end--;
         }
-
-        displaySub ();
     }
 
     private void compareData() {
@@ -304,7 +300,20 @@ public class SubBF extends AppCompatActivity {
             e.printStackTrace();
         }*/
 
-        getSubData ();
+        missing.remove (0);
+        if(missing.size()!=0) {
+            listContent.setText (missing.get(0));
+            getSubData ();
+        }else if(missing.size()==0){
+            listContent.setText ("");
+            sub.clear ();
+            data.setText ("Your ingredients are now complete!");
+
+            Button buttonDone = ( Button ) findViewById (R.id.btnDone);
+            Button buttonNext = ( Button ) findViewById (R.id.btnNext);
+            buttonDone.setVisibility(View.VISIBLE);
+            buttonNext.setVisibility(View.GONE);
+        }
     }
 
 }

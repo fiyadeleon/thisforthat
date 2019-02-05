@@ -9,27 +9,27 @@
     <ListView
         android:id="@android:id/android:list"
         android:layout_width="match_parent"
-        android:layout_height="320dp"
-        android:layout_alignParentBottom="true"
+        android:layout_height="549dp"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="74dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="116dp"
         android:layout_weight="1"
         android:background="#FFFFFF" />
 
     <Button
         android:id="@+id/btnContinue"
         android:layout_width="130dp"
-        android:layout_height="40dp"
+        android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="13dp"
-        android:fontFamily="@font/oswald_light"
-        android:text="Continue"
         android:background="@drawable/button_shape"
+        android:fontFamily="@font/oswald_light"
+        android:onClick="onContinue"
+        android:text="Continue"
         android:textColor="@color/colorPrimary"
         android:textColorLink="@color/colorPrimaryDark"
-        android:textSize="14sp"
-        android:onClick="onContinue"/>
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/txtIngredient"

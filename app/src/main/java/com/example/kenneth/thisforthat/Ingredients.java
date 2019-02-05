@@ -22,9 +22,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
 
 import static com.example.kenneth.thisforthat.DatabaseHelper.*;
@@ -45,14 +42,16 @@ public class Ingredients extends ListActivity{
     List<String> onhandList = new ArrayList<String>();
     String[] arrOnhandList;
 
-    List<String> checkFreq = new ArrayList<String> ();
-    String[] arrCheckFreq;
+    List<Integer> checkFreq = new ArrayList<> ();
 
-    List<String> mainIng = new ArrayList<String> ();
-    String[] arrMainIng;
+    List<String[]> mainIng = new ArrayList<String[]> ();
+    String[][] arrMainIng;
 
     List<String[]> subIng = new ArrayList<String[]> ();
     String[][] arrSubIng;
+
+    List<String> tempIng = new ArrayList<String> ();
+    String[] arrTempIng;
 
 
     @Override
@@ -106,46 +105,18 @@ public class Ingredients extends ListActivity{
                 //check lahat nung lines sa csv file
                 while ((sCurrentline = br.readLine ()) != null) {
                     checkCol = sCurrentline.split (",");
-                    checkFreq.add (checkCol[index]);
+                    checkFreq.add (Integer.valueOf (checkCol[index]));
                 }
 
-                if(checkFreq.contains(0)){
-                    System.out.println ("puro zero");
-                    bfListView ();
-                }else{
-                    startActivity(new Intent (Ingredients.this, NewIngredients.class));
-                    try {
-                        String[] checkMainIng;
-                        br = new BufferedReader (new FileReader ("/sdcard/MAIN_BF.csv"));
-                        //check lahat nung lines sa csv file
-                        while ((sCurrentline = br.readLine ()) != null) {
-                            checkMainIng = sCurrentline.split (",");
-                            mainIng.add (checkMainIng[0]);
-
-                            try {
-                                br = new BufferedReader (new FileReader ("/sdcard/TABLE_BF.csv"));
-                                //check lahat nung lines sa csv file
-                                while ((sCurrentline = br.readLine ()) != null) {
-                                    subIng.add(sCurrentline.split (","));
-                                    arrSubIng = new String[subIng.size ()][];
-                                    subIng.toArray (arrSubIng);
-                                }
-                            } catch (IOException e) {
-                                e.printStackTrace ();
-                            }
-                            /*
-                            for(int i = 0; i < subIng.size (); i++) {
-                                if (checkMainIng[0].equals (arrSubIng[i][0])) {
-                                    System.out.println (arrSubIng[i][1]);
-                                }
-                            }*/
-
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace ();
+                for (Integer s : checkFreq) {
+                    if(s.equals(checkFreq.get(0))) {
+                        System.out.println ("puro zero");
+                        bfListView ();
+                    }else{
+                        startActivity(new Intent (Ingredients.this, NewIngredients.class));
                     }
-
                 }
+
             } catch (IOException e) {
                 e.printStackTrace ();
             }
@@ -161,16 +132,18 @@ public class Ingredients extends ListActivity{
                 while ((sCurrentline = br.readLine ()) != null) {
                     checkCol = sCurrentline.split (",");
                     //then iistore ung naread na data sa csv na nasa column[i]
-                    checkFreq.add (checkCol[index]);
+                    checkFreq.add (Integer.valueOf (checkCol[index]));
                 }
 
-                if(checkFreq.contains(0)){
-                    System.out.println ("puro zero");
-                    bmListView ();
-
-                }else{
-                    startActivity(new Intent (Ingredients.this, NewIngredients.class));
+                for (Integer s : checkFreq) {
+                    if(s.equals(checkFreq.get(0))) {
+                        System.out.println ("puro zero");
+                        bmListView ();
+                    }else{
+                        //startActivity(new Intent (Ingredients.this, NewIngredients.class));
+                    }
                 }
+
             } catch (IOException e) {
                 e.printStackTrace ();
             }
@@ -186,16 +159,18 @@ public class Ingredients extends ListActivity{
                 while ((sCurrentline = br.readLine ()) != null) {
                     checkCol = sCurrentline.split (",");
                     //then iistore ung naread na data sa csv na nasa column[i]
-                    checkFreq.add (checkCol[index]);
+                    checkFreq.add (Integer.valueOf (checkCol[index]));
                 }
 
-                if(checkFreq.contains(0)){
-                    System.out.println ("puro zero");
-                    bcListView ();
-
-                }else{
-                    startActivity(new Intent (Ingredients.this, NewIngredients.class));
+                for (Integer s : checkFreq) {
+                    if(s.equals(checkFreq.get(0))) {
+                        System.out.println ("puro zero");
+                        bcListView ();
+                    }else{
+                        //startActivity(new Intent (Ingredients.this, NewIngredients.class));
+                    }
                 }
+
             } catch (IOException e) {
                 e.printStackTrace ();
             }
@@ -211,16 +186,18 @@ public class Ingredients extends ListActivity{
                 while ((sCurrentline = br.readLine ()) != null) {
                     checkCol = sCurrentline.split (",");
                     //then iistore ung naread na data sa csv na nasa column[i]
-                    checkFreq.add (checkCol[index]);
+                    checkFreq.add (Integer.valueOf (checkCol[index]));
                 }
 
-                if(checkFreq.contains(0)){
-                    System.out.println ("puro zero");
-                    ccListView ();
-
-                }else{
-                    startActivity(new Intent (Ingredients.this, NewIngredients.class));
+                for (Integer s : checkFreq) {
+                    if(s.equals(checkFreq.get(0))) {
+                        System.out.println ("puro zero");
+                        ccListView ();
+                    }else{
+                        //startActivity(new Intent (Ingredients.this, NewIngredients.class));
+                    }
                 }
+
             } catch (IOException e) {
                 e.printStackTrace ();
             }
@@ -236,16 +213,18 @@ public class Ingredients extends ListActivity{
                 while ((sCurrentline = br.readLine ()) != null) {
                     checkCol = sCurrentline.split (",");
                     //then iistore ung naread na data sa csv na nasa column[i]
-                    checkFreq.add (checkCol[index]);
+                    checkFreq.add (Integer.valueOf (checkCol[index]));
                 }
 
-                if(checkFreq.contains(0)){
-                    System.out.println ("puro zero");
-                    cmListView ();
-
-                }else{
-                    startActivity(new Intent (Ingredients.this, NewIngredients.class));
+                for (Integer s : checkFreq) {
+                    if(s.equals(checkFreq.get(0))) {
+                        System.out.println ("puro zero");
+                        cmListView ();
+                    }else{
+                        //startActivity(new Intent (Ingredients.this, NewIngredients.class));
+                    }
                 }
+
             } catch (IOException e) {
                 e.printStackTrace ();
             }
@@ -261,16 +240,18 @@ public class Ingredients extends ListActivity{
                 while ((sCurrentline = br.readLine ()) != null) {
                     checkCol = sCurrentline.split (",");
                     //then iistore ung naread na data sa csv na nasa column[i]
-                    checkFreq.add (checkCol[index]);
+                    checkFreq.add (Integer.valueOf (checkCol[index]));
                 }
 
-                if(checkFreq.contains(0)){
-                    System.out.println ("puro zero");
-                    mcListView ();
-
-                }else{
-                    startActivity(new Intent (Ingredients.this, NewIngredients.class));
+                for (Integer s : checkFreq) {
+                    if(s.equals(checkFreq.get(0))) {
+                        System.out.println ("puro zero");
+                        mcListView ();
+                    }else{
+                        //startActivity(new Intent (Ingredients.this, NewIngredients.class));
+                    }
                 }
+
             } catch (IOException e) {
                 e.printStackTrace ();
             }
@@ -286,16 +267,18 @@ public class Ingredients extends ListActivity{
                 while ((sCurrentline = br.readLine ()) != null) {
                     checkCol = sCurrentline.split (",");
                     //then iistore ung naread na data sa csv na nasa column[i]
-                    checkFreq.add (checkCol[index]);
+                    checkFreq.add (Integer.valueOf (checkCol[index]));
                 }
 
-                if(checkFreq.contains(0)){
-                    System.out.println ("puro zero");
-                    rcListView ();
-
-                }else{
-                    startActivity(new Intent (Ingredients.this, NewIngredients.class));
+                for (Integer s : checkFreq) {
+                    if(s.equals(checkFreq.get(0))) {
+                        System.out.println ("puro zero");
+                        rcListView ();
+                    }else{
+                        //startActivity(new Intent (Ingredients.this, NewIngredients.class));
+                    }
                 }
+
             } catch (IOException e) {
                 e.printStackTrace ();
             }
@@ -311,16 +294,18 @@ public class Ingredients extends ListActivity{
                 while ((sCurrentline = br.readLine ()) != null) {
                     checkCol = sCurrentline.split (",");
                     //then iistore ung naread na data sa csv na nasa column[i]
-                    checkFreq.add (checkCol[index]);
+                    checkFreq.add (Integer.valueOf (checkCol[index]));
                 }
 
-                if(checkFreq.contains(0)){
-                    System.out.println ("puro zero");
-                    scListView ();
-
-                }else{
-                    startActivity(new Intent (Ingredients.this, NewIngredients.class));
+                for (Integer s : checkFreq) {
+                    if(s.equals(checkFreq.get(0))) {
+                        System.out.println ("puro zero");
+                        scListView ();
+                    }else{
+                        //startActivity(new Intent (Ingredients.this, NewIngredients.class));
+                    }
                 }
+
             } catch (IOException e) {
                 e.printStackTrace ();
             }
@@ -336,16 +321,18 @@ public class Ingredients extends ListActivity{
                 while ((sCurrentline = br.readLine ()) != null) {
                     checkCol = sCurrentline.split (",");
                     //then iistore ung naread na data sa csv na nasa column[i]
-                    checkFreq.add (checkCol[index]);
+                    checkFreq.add (Integer.valueOf (checkCol[index]));
                 }
 
-                if(checkFreq.contains(0)){
-                    System.out.println ("puro zero");
-                    umListView ();
-
-                }else{
-                    startActivity(new Intent (Ingredients.this, NewIngredients.class));
+                for (Integer s : checkFreq) {
+                    if(s.equals(checkFreq.get(0))) {
+                        System.out.println ("puro zero");
+                        umListView ();
+                    }else{
+                        //startActivity(new Intent (Ingredients.this, NewIngredients.class));
+                    }
                 }
+
             } catch (IOException e) {
                 e.printStackTrace ();
             }
@@ -361,16 +348,18 @@ public class Ingredients extends ListActivity{
                 while ((sCurrentline = br.readLine ()) != null) {
                     checkCol = sCurrentline.split (",");
                     //then iistore ung naread na data sa csv na nasa column[i]
-                    checkFreq.add (checkCol[index]);
+                    checkFreq.add (Integer.valueOf (checkCol[index]));
                 }
 
-                if(checkFreq.contains(0)){
-                    System.out.println ("puro zero");
-                    vcListView ();
-
-                }else{
-                    startActivity(new Intent (Ingredients.this, NewIngredients.class));
+                for (Integer s : checkFreq) {
+                    if(s.equals(checkFreq.get(0))) {
+                        System.out.println ("puro zero");
+                        vcListView ();
+                    }else{
+                        //startActivity(new Intent (Ingredients.this, NewIngredients.class));
+                    }
                 }
+
             } catch (IOException e) {
                 e.printStackTrace ();
             }
