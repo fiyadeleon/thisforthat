@@ -8,9 +8,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 
 public class SignupActivity extends AppCompatActivity {
     String filePath = "/sdcard/insert.csv";
@@ -48,15 +54,17 @@ public class SignupActivity extends AppCompatActivity {
                     return;
                 }
                 else {
-                    BufferedWriter writer = null;
+                    BufferedWriter writer = null, writer1 = null;
                     try {
                         writer = new BufferedWriter (new FileWriter(filePath, true));
                         writer.write(username);
                         writer.write(",");
                         writer.write (password);
                         writer.write ("\n");
-
                         writer.flush ();
+                        writer.close ();
+
+                        addColumn ();
 
                         Toast.makeText(getApplicationContext(), "Account Successfully Created ", Toast.LENGTH_LONG).show();
                         startActivity(new Intent (SignupActivity.this, LoginActivity.class));
@@ -67,6 +75,313 @@ public class SignupActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void addColumn(){
+        String username = editTextUserName.getText().toString();
+        BufferedReader br = null;
+        BufferedWriter bw = null;
+
+        try {
+            File file = new File("/sdcard/TABLE_BF.csv");
+            File newfile = new File("/sdcard/TABLE_BF.csv");
+
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(file))) ;
+            boolean deleted = file.delete();
+            bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(newfile, false)));
+
+            String line = null;
+
+            line = br.readLine();
+            String addedColumn = username;
+            bw.write(line+","+addedColumn);
+            bw.write ("\n");
+
+            while((line = br.readLine())!=null){
+                bw.write(line+","+"0");
+                bw.write ("\n");
+            }
+        } catch(Exception e){
+            System.out.println(e);
+        }finally {
+            try {
+                br.close ();
+                bw.close ();
+            } catch (IOException e) {
+                e.printStackTrace ();
+            }
+        }
+
+        try {
+            File file = new File("/sdcard/TABLE_BM.csv");
+            File newfile = new File("/sdcard/TABLE_BM.csv");
+
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(file))) ;
+            boolean deleted = file.delete();
+            bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(newfile, false)));
+
+            String line = null;
+
+            line = br.readLine();
+            String addedColumn = username;
+            bw.write(line+","+addedColumn);
+            bw.write ("\n");
+
+            while((line = br.readLine())!=null){
+                bw.write(line+","+"0");
+                bw.write ("\n");
+            }
+        } catch(Exception e){
+            System.out.println(e);
+        }finally {
+            try {
+                br.close ();
+                bw.close ();
+            } catch (IOException e) {
+                e.printStackTrace ();
+            }
+        }
+
+        try {
+            File file = new File("/sdcard/TABLE_BC.csv");
+            File newfile = new File("/sdcard/TABLE_BC.csv");
+
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(file))) ;
+            boolean deleted = file.delete();
+            bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(newfile, false)));
+
+            String line = null;
+
+            line = br.readLine();
+            String addedColumn = username;
+            bw.write(line+","+addedColumn);
+            bw.write ("\n");
+
+            while((line = br.readLine())!=null){
+                bw.write(line+","+"0");
+                bw.write ("\n");
+            }
+        } catch(Exception e){
+            System.out.println(e);
+        }finally {
+            try {
+                br.close ();
+                bw.close ();
+            } catch (IOException e) {
+                e.printStackTrace ();
+            }
+        }
+
+        try {
+            File file = new File("/sdcard/TABLE_CC.csv");
+            File newfile = new File("/sdcard/TABLE_CC.csv");
+
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(file))) ;
+            boolean deleted = file.delete();
+            bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(newfile, false)));
+
+            String line = null;
+
+            line = br.readLine();
+            String addedColumn = username;
+            bw.write(line+","+addedColumn);
+            bw.write ("\n");
+
+            while((line = br.readLine())!=null){
+                bw.write(line+","+"0");
+                bw.write ("\n");
+            }
+        } catch(Exception e){
+            System.out.println(e);
+        }finally {
+            try {
+                br.close ();
+                bw.close ();
+            } catch (IOException e) {
+                e.printStackTrace ();
+            }
+        }
+
+        try {
+            File file = new File("/sdcard/TABLE_CM.csv");
+            File newfile = new File("/sdcard/TABLE_CM.csv");
+
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(file))) ;
+            boolean deleted = file.delete();
+            bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(newfile, false)));
+
+            String line = null;
+
+            line = br.readLine();
+            String addedColumn = username;
+            bw.write(line+","+addedColumn);
+            bw.write ("\n");
+
+            while((line = br.readLine())!=null){
+                bw.write(line+","+"0");
+                bw.write ("\n");
+            }
+        } catch(Exception e){
+            System.out.println(e);
+        }finally {
+            try {
+                br.close ();
+                bw.close ();
+            } catch (IOException e) {
+                e.printStackTrace ();
+            }
+        }
+
+        try {
+            File file = new File("/sdcard/TABLE_MC.csv");
+            File newfile = new File("/sdcard/TABLE_MC.csv");
+
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(file))) ;
+            boolean deleted = file.delete();
+            bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(newfile, false)));
+
+            String line = null;
+
+            line = br.readLine();
+            String addedColumn = username;
+            bw.write(line+","+addedColumn);
+            bw.write ("\n");
+
+            while((line = br.readLine())!=null){
+                bw.write(line+","+"0");
+                bw.write ("\n");
+            }
+        } catch(Exception e){
+            System.out.println(e);
+        }finally {
+            try {
+                br.close ();
+                bw.close ();
+            } catch (IOException e) {
+                e.printStackTrace ();
+            }
+        }
+
+        try {
+            File file = new File("/sdcard/TABLE_RC.csv");
+            File newfile = new File("/sdcard/TABLE_RC.csv");
+
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(file))) ;
+            boolean deleted = file.delete();
+            bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(newfile, false)));
+
+            String line = null;
+
+            line = br.readLine();
+            String addedColumn = username;
+            bw.write(line+","+addedColumn);
+            bw.write ("\n");
+
+            while((line = br.readLine())!=null){
+                bw.write(line+","+"0");
+                bw.write ("\n");
+            }
+        } catch(Exception e){
+            System.out.println(e);
+        }finally {
+            try {
+                br.close ();
+                bw.close ();
+            } catch (IOException e) {
+                e.printStackTrace ();
+            }
+        }
+
+        try {
+            File file = new File("/sdcard/TABLE_SC.csv");
+            File newfile = new File("/sdcard/TABLE_SC.csv");
+
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(file))) ;
+            boolean deleted = file.delete();
+            bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(newfile, false)));
+
+            String line = null;
+
+            line = br.readLine();
+            String addedColumn = username;
+            bw.write(line+","+addedColumn);
+            bw.write ("\n");
+
+            while((line = br.readLine())!=null){
+                bw.write(line+","+"0");
+                bw.write ("\n");
+            }
+        } catch(Exception e){
+            System.out.println(e);
+        }finally {
+            try {
+                br.close ();
+                bw.close ();
+            } catch (IOException e) {
+                e.printStackTrace ();
+            }
+        }
+
+        try {
+            File file = new File("/sdcard/TABLE_UM.csv");
+            File newfile = new File("/sdcard/TABLE_UM.csv");
+
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(file))) ;
+            boolean deleted = file.delete();
+            bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(newfile, false)));
+
+            String line = null;
+
+            line = br.readLine();
+            String addedColumn = username;
+            bw.write(line+","+addedColumn);
+            bw.write ("\n");
+
+            while((line = br.readLine())!=null){
+                bw.write(line+","+"0");
+                bw.write ("\n");
+            }
+        } catch(Exception e){
+            System.out.println(e);
+        }finally {
+            try {
+                br.close ();
+                bw.close ();
+            } catch (IOException e) {
+                e.printStackTrace ();
+            }
+        }
+
+        try {
+            File file = new File("/sdcard/TABLE_VC.csv");
+            File newfile = new File("/sdcard/TABLE_VC.csv");
+
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(file))) ;
+            boolean deleted = file.delete();
+            bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(newfile, false)));
+
+            String line = null;
+
+            line = br.readLine();
+            String addedColumn = username;
+            bw.write(line+","+addedColumn);
+            bw.write ("\n");
+
+            while((line = br.readLine())!=null){
+                bw.write(line+","+"0");
+                bw.write ("\n");
+            }
+        } catch(Exception e){
+            System.out.println(e);
+        }finally {
+            try {
+                br.close ();
+                bw.close ();
+            } catch (IOException e) {
+                e.printStackTrace ();
+            }
+        }
+
     }
 
     public void onBackPressed(){

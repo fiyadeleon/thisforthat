@@ -25,7 +25,7 @@
         android:layout_marginBottom="13dp"
         android:background="@drawable/button_shape"
         android:fontFamily="@font/oswald_light"
-        android:onClick="onContinue"
+        android:onClick="onNewContinue"
         android:text="Continue"
         android:textColor="@color/colorPrimary"
         android:textColorLink="@color/colorPrimaryDark"

@@ -37,21 +37,9 @@ public class Ingredients extends ListActivity{
     public static Dialog mDialog;
     public Button mDialogyes, mDialogno;
     String sCurrentline;
-    int index = 0;
 
     List<String> onhandList = new ArrayList<String>();
-    String[] arrOnhandList;
-
     List<Integer> checkFreq = new ArrayList<> ();
-
-    List<String[]> mainIng = new ArrayList<String[]> ();
-    String[][] arrMainIng;
-
-    List<String[]> subIng = new ArrayList<String[]> ();
-    String[][] arrSubIng;
-
-    List<String> tempIng = new ArrayList<String> ();
-    String[] arrTempIng;
 
 
     @Override
@@ -69,6 +57,8 @@ public class Ingredients extends ListActivity{
     public void checkUser(){
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         String name = sp.getString("Username", "");
+        System.out.println ("username "+name);
+        int index = 0;
 
         try {
             File file = new File("/sdcard/TABLE_BF.csv");
@@ -82,17 +72,22 @@ public class Ingredients extends ListActivity{
                     index = i;
                 }
             }
+
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putInt ("Index", index);
+            editor.commit();
         } catch (IOException e) {
             e.printStackTrace ();
         }
 
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putInt ("Index", index);
-        editor.commit();
+        System.out.println ("index "+ index);
     }
 
     public void display(){
         buttonValue = Integer.valueOf(getIntent ().getStringExtra("yourcode"));
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        final int getIndex = sp.getInt ("Index", 0);
+
         BufferedReader br;
 
         if (1 == buttonValue ) {
@@ -105,7 +100,7 @@ public class Ingredients extends ListActivity{
                 //check lahat nung lines sa csv file
                 while ((sCurrentline = br.readLine ()) != null) {
                     checkCol = sCurrentline.split (",");
-                    checkFreq.add (Integer.valueOf (checkCol[index]));
+                    checkFreq.add (Integer.valueOf (checkCol[getIndex]));
                 }
 
                 for (Integer s : checkFreq) {
@@ -132,7 +127,7 @@ public class Ingredients extends ListActivity{
                 while ((sCurrentline = br.readLine ()) != null) {
                     checkCol = sCurrentline.split (",");
                     //then iistore ung naread na data sa csv na nasa column[i]
-                    checkFreq.add (Integer.valueOf (checkCol[index]));
+                    checkFreq.add (Integer.valueOf (checkCol[getIndex]));
                 }
 
                 for (Integer s : checkFreq) {
@@ -159,7 +154,7 @@ public class Ingredients extends ListActivity{
                 while ((sCurrentline = br.readLine ()) != null) {
                     checkCol = sCurrentline.split (",");
                     //then iistore ung naread na data sa csv na nasa column[i]
-                    checkFreq.add (Integer.valueOf (checkCol[index]));
+                    checkFreq.add (Integer.valueOf (checkCol[getIndex]));
                 }
 
                 for (Integer s : checkFreq) {
@@ -186,7 +181,7 @@ public class Ingredients extends ListActivity{
                 while ((sCurrentline = br.readLine ()) != null) {
                     checkCol = sCurrentline.split (",");
                     //then iistore ung naread na data sa csv na nasa column[i]
-                    checkFreq.add (Integer.valueOf (checkCol[index]));
+                    checkFreq.add (Integer.valueOf (checkCol[getIndex]));
                 }
 
                 for (Integer s : checkFreq) {
@@ -213,7 +208,7 @@ public class Ingredients extends ListActivity{
                 while ((sCurrentline = br.readLine ()) != null) {
                     checkCol = sCurrentline.split (",");
                     //then iistore ung naread na data sa csv na nasa column[i]
-                    checkFreq.add (Integer.valueOf (checkCol[index]));
+                    checkFreq.add (Integer.valueOf (checkCol[getIndex]));
                 }
 
                 for (Integer s : checkFreq) {
@@ -240,7 +235,7 @@ public class Ingredients extends ListActivity{
                 while ((sCurrentline = br.readLine ()) != null) {
                     checkCol = sCurrentline.split (",");
                     //then iistore ung naread na data sa csv na nasa column[i]
-                    checkFreq.add (Integer.valueOf (checkCol[index]));
+                    checkFreq.add (Integer.valueOf (checkCol[getIndex]));
                 }
 
                 for (Integer s : checkFreq) {
@@ -267,7 +262,7 @@ public class Ingredients extends ListActivity{
                 while ((sCurrentline = br.readLine ()) != null) {
                     checkCol = sCurrentline.split (",");
                     //then iistore ung naread na data sa csv na nasa column[i]
-                    checkFreq.add (Integer.valueOf (checkCol[index]));
+                    checkFreq.add (Integer.valueOf (checkCol[getIndex]));
                 }
 
                 for (Integer s : checkFreq) {
@@ -294,7 +289,7 @@ public class Ingredients extends ListActivity{
                 while ((sCurrentline = br.readLine ()) != null) {
                     checkCol = sCurrentline.split (",");
                     //then iistore ung naread na data sa csv na nasa column[i]
-                    checkFreq.add (Integer.valueOf (checkCol[index]));
+                    checkFreq.add (Integer.valueOf (checkCol[getIndex]));
                 }
 
                 for (Integer s : checkFreq) {
@@ -321,7 +316,7 @@ public class Ingredients extends ListActivity{
                 while ((sCurrentline = br.readLine ()) != null) {
                     checkCol = sCurrentline.split (",");
                     //then iistore ung naread na data sa csv na nasa column[i]
-                    checkFreq.add (Integer.valueOf (checkCol[index]));
+                    checkFreq.add (Integer.valueOf (checkCol[getIndex]));
                 }
 
                 for (Integer s : checkFreq) {
@@ -348,7 +343,7 @@ public class Ingredients extends ListActivity{
                 while ((sCurrentline = br.readLine ()) != null) {
                     checkCol = sCurrentline.split (",");
                     //then iistore ung naread na data sa csv na nasa column[i]
-                    checkFreq.add (Integer.valueOf (checkCol[index]));
+                    checkFreq.add (Integer.valueOf (checkCol[getIndex]));
                 }
 
                 for (Integer s : checkFreq) {
@@ -367,7 +362,6 @@ public class Ingredients extends ListActivity{
     }
 
     protected void createDialog() {
-        checkUser ();
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         final int getIndex = sp.getInt ("Index", 0);
 

@@ -30,6 +30,8 @@ public class CustomAdapter<T> extends BaseAdapter{
     LayoutInflater mInflater;
     ArrayList<T> mList;
     SparseBooleanArray mSparseBooleanArray;
+    ArrayList<T> mTempCheckedArry = new ArrayList<T>();
+    public static List<String> onhand = new ArrayList<> ();
 
     ContentValues values;
     String sCurrentline;
@@ -45,8 +47,6 @@ public class CustomAdapter<T> extends BaseAdapter{
     }
 
     public ArrayList<T> getCheckedItems() {
-        ArrayList<T> mTempCheckedArry = new ArrayList<T>();
-        List<String> onhand = new ArrayList<> ();
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
         final int getIndex = sp.getInt ("Index", 0);
         final String getName = sp.getString ("btnName", "");
@@ -70,18 +70,16 @@ public class CustomAdapter<T> extends BaseAdapter{
                 onhandList.add (col[1]);
             }
 
-            System.out.println (mTempCheckedArry.size ());
-
             for (int i = 0; i < onhandList.size (); i++) {
                 for (int j = 0; j < onhand.size (); j++) {
                     if (onhandList.get (i).equals (onhand.get (j))) {
-                        CSVReader reader = new CSVReader (new FileReader("/sdcard/"+getName+".csv"), ',');
+                        CSVReader reader = new CSVReader (new FileReader(file), ',');
                         List<String[]> csvBody = reader.readAll();
                         int convert = Integer.parseInt (csvBody.get(i)[getIndex]) + 1;
                         csvBody.get(i)[getIndex] = String.valueOf (convert);
                         reader.close();
 
-                        CSVWriter writer = new CSVWriter(new FileWriter ("/sdcard/"+getName+".csv"), ',', CSVWriter.NO_QUOTE_CHARACTER);
+                        CSVWriter writer = new CSVWriter(new FileWriter (file), ',', CSVWriter.NO_QUOTE_CHARACTER);
                         writer.writeAll(csvBody);
                         writer.flush();
                         writer.close();
@@ -92,6 +90,7 @@ public class CustomAdapter<T> extends BaseAdapter{
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return mTempCheckedArry;
     }
 
