@@ -63,6 +63,7 @@ public class NewIngredients extends Activity{
     private void init() {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         final String getName = sp.getString ("btnName", "");
+        final int getIndex = sp.getInt ("Index", 0);
         List<IngredientsHolder> data = new ArrayList<> ();
 
         try {
@@ -71,7 +72,7 @@ public class NewIngredients extends Activity{
             sCurrentline = br.readLine ();
             while ((sCurrentline = br.readLine()) != null) {
                 String[] arr = sCurrentline.split(",");
-                IngredientsHolder ingredient = new IngredientsHolder(arr[0], arr[1], arr[2]);
+                IngredientsHolder ingredient = new IngredientsHolder(arr[0], arr[1], arr[getIndex]);
                 data.add(ingredient);
             }
             br.close();

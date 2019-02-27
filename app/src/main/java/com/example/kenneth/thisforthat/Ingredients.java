@@ -79,8 +79,6 @@ public class Ingredients extends ListActivity{
         } catch (IOException e) {
             e.printStackTrace ();
         }
-
-        System.out.println ("index "+ index);
     }
 
     public void display(){

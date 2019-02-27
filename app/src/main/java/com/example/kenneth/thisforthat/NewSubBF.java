@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
@@ -55,7 +56,7 @@ public class NewSubBF extends AppCompatActivity {
         Button buttonDone = ( Button ) findViewById (R.id.btnDone);
         Button buttonNext = ( Button ) findViewById (R.id.btnNext);
         buttonDone.setVisibility(View.GONE);
-        buttonNext.setVisibility(View.VISIBLE);
+        buttonNext.setVisibility(View.GONE);
 
         createDialog ();
 
@@ -161,24 +162,36 @@ public class NewSubBF extends AppCompatActivity {
     private void displaySub() {
         subList.clear ();
         if(sub.size ()!=0) {
-            ListView listView = ( ListView ) findViewById (R.id.listViewExample);
-            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String> (this, android.R.layout.simple_list_item_multiple_choice, sub);
-            listView.setAdapter (arrayAdapter);
+            if(sub.contains (String.valueOf (newMissing.get (0)))){
+                sub.remove(String.valueOf (newMissing.get (0)));
 
-            listView.setOnItemClickListener (new AdapterView.OnItemClickListener () {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
-                    Object clickItemObj = adapterView.getAdapter ().getItem (index);
-                    String strItem = clickItemObj.toString ();
-                    SparseBooleanArray checked = listView.getCheckedItemPositions();
-                    if(checked.get(index)){
-                        subList.add(strItem);
+                ListView listView = ( ListView ) findViewById (R.id.listViewExample);
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String> (this, android.R.layout.simple_list_item_multiple_choice, sub);
+                listView.setAdapter (arrayAdapter);
+
+                listView.setOnItemClickListener (new AdapterView.OnItemClickListener () {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
+                        if(listView.isItemChecked (index)) {
+                            Object clickItemObj = adapterView.getAdapter ().getItem (index);
+                            String strItem = clickItemObj.toString ();
+                            SparseBooleanArray checked = listView.getCheckedItemPositions ();
+                            if (checked.get (index)) {
+                                subList.add (strItem);
+                            } else {
+                                subList.remove (strItem);
+                            }
+
+                            Button buttonNext = ( Button ) findViewById (R.id.btnNext);
+                            buttonNext.setVisibility(View.VISIBLE);
+                        }else{
+                            Toast.makeText(getApplicationContext(), "Choose at least one ingredient", Toast.LENGTH_LONG).show();
+                            Button buttonNext = ( Button ) findViewById (R.id.btnNext);
+                            buttonNext.setVisibility(View.GONE);
+                        }
                     }
-                    else{
-                        subList.remove(strItem);
-                    }
-                }
-            });
+                });
+            }
 
         }else{
             data.setText ("No available substitute ingredient");
@@ -220,6 +233,7 @@ public class NewSubBF extends AppCompatActivity {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         final int getIndex = sp.getInt ("Index", 0);
         final String getName = sp.getString ("btnName", "");
+        ListView listView = ( ListView ) findViewById (R.id.listViewExample);
         onhandList.clear ();
 
         try {
